@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nirvana Trails — Transformational Wellness Retreats in India</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,800;1,400;1,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:        #0e0817;
+      --ink-2:      #160f26;
+      --ink-card:   #1c1232;
+      --gold:       #c9a45c;
+      --gold-pale:  #e8c88a;
+      --gold-dim:   rgba(201,164,92,0.18);
+      --cream:      #f5ede0;
+      --cream-2:    #faf6f0;
+      --plum:       #6b3399;
+      --plum-lt:    #9b6cd4;
+      --on-dark:    #f0e6d3;
+      --on-dark-m:  rgba(240,230,211,0.55);
+      --on-light:   #1a1218;
+      --on-light-m: #6b5868;
+      --b-dark:     rgba(201,164,92,0.16);
+      --b-light:    rgba(107,51,153,0.12);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--ink);
+      color: var(--on-dark);
+      overflow-x: hidden;
+    }
+
+    /* ─── GRAIN OVERLAY ─── */
+    .grain {
+      position: fixed; inset: 0; z-index: 9999;
+      pointer-events: none; opacity: 0.028;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)'/%3E%3C/svg%3E");
+    }
+
+    /* ─── HEADER ─── */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+      padding: 0 3rem; height: 76px;
+      display: flex; align-items: center; justify-content: space-between;
+      transition: background 0.5s ease, border-color 0.5s ease, backdrop-filter 0.5s;
+      border-bottom: 1px solid transparent;
+    }
+
+    header.scrolled {
+      background: rgba(14,8,23,0.88);
+      backdrop-filter: blur(24px);
+      border-bottom-color: var(--b-dark);
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--gold); text-decoration: none;
+    }
+
+    .nav-links { display: flex; align-items: center; gap: 2.5rem; }
+
+    .nav-links a {
+      text-decoration: none; font-size: 0.8rem; font-weight: 500;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--on-dark-m); transition: color 0.3s;
+    }
+
+    .nav-links a:hover { color: var(--gold); }
+
+    .nav-book {
+      padding: 0.5rem 1.5rem; border: 1px solid var(--gold);
+      border-radius: 2px; color: var(--gold) !important;
+      transition: all 0.3s !important; letter-spacing: 0.08em !important;
+    }
+
+    .nav-book:hover { background: var(--gold) !important; color: var(--ink) !important; }
+
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 6px; }
+    .hamburger span { display: block; width: 22px; height: 1.5px; background: var(--on-dark); transition: all 0.3s; }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative; min-height: 100svh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 0 3rem; overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 80% at 60% 50%, rgba(107,51,153,0.22) 0%, transparent 65%),
+                  radial-gradient(ellipse 50% 50% at 20% 80%, rgba(201,164,92,0.08) 0%, transparent 60%),
+                  var(--ink);
+    }
+
+    .hero-mandala {
+      position: absolute; right: -8%; top: 50%; transform: translateY(-50%);
+      width: min(700px, 55vw); aspect-ratio: 1;
+      opacity: 0.12; animation: spin 120s linear infinite;
+      pointer-events: none;
+    }
+
+    .hero-mandala-inner {
+      position: absolute; right: 8%; top: 50%; transform: translateY(-50%);
+      width: min(400px, 32vw); aspect-ratio: 1;
+      opacity: 0.18; animation: spin 60s linear infinite reverse;
+      pointer-events: none;
+    }
+
+    @keyframes spin { from { transform: translateY(-50%) rotate(0deg); } to { transform: translateY(-50%) rotate(360deg); } }
+
+    .hero-content {
+      position: relative; z-index: 2;
+      max-width: 700px;
+      animation: fadeUp 1.2s cubic-bezier(.16,1,.3,1) both;
+    }
+
+    .hero-eyebrow {
+      display: flex; align-items: center; gap: 1rem;
+      font-size: 0.7rem; font-weight: 500; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 2rem;
+    }
+
+    .hero-eyebrow::before {
+      content: ''; display: block; width: 40px; height: 1px; background: var(--gold);
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.2rem, 7vw, 6.5rem);
+      font-weight: 800; line-height: 1.05;
+      color: var(--on-dark); letter-spacing: -0.01em;
+      margin-bottom: 1.75rem;
+    }
+
+    .hero h1 em {
+      font-style: italic; color: var(--gold);
+      font-weight: 400;
+    }
+
+    .hero-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.05rem, 2vw, 1.3rem); font-weight: 300;
+      color: var(--on-dark-m); line-height: 1.75; max-width: 500px;
+      margin-bottom: 3rem;
+    }
+
+    .hero-actions { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+
+    .btn-gold {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      padding: 0.9rem 2.4rem;
+      background: var(--gold); color: var(--ink);
+      font-size: 0.8rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+      text-decoration: none; border: none; border-radius: 2px; cursor: pointer;
+      transition: all 0.4s; white-space: nowrap;
+    }
+
+    .btn-gold:hover { background: var(--gold-pale); transform: translateY(-2px); box-shadow: 0 12px 40px rgba(201,164,92,0.3); }
+
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      padding: 0.9rem 2.4rem;
+      background: transparent; color: var(--on-dark);
+      font-size: 0.8rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+      text-decoration: none; border: 1px solid rgba(240,230,211,0.25); border-radius: 2px;
+      transition: all 0.4s; white-space: nowrap;
+    }
+
+    .btn-ghost:hover { border-color: var(--on-dark); }
+
+    .hero-scroll {
+      position: absolute; bottom: 2.5rem; left: 3rem;
+      display: flex; align-items: center; gap: 0.75rem;
+      font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--on-dark-m); animation: fadeIn 1.5s ease 0.8s both;
+    }
+
+    .hero-scroll .line {
+      width: 40px; height: 1px; background: var(--on-dark-m);
+      animation: expandWidth 1.5s ease 1s both;
+    }
+
+    @keyframes expandWidth { from { width: 0; } to { width: 40px; } }
+
+    /* ─── STAT STRIP ─── */
+    .stat-strip {
+      background: var(--ink-2);
+      border-top: 1px solid var(--b-dark);
+      border-bottom: 1px solid var(--b-dark);
+      padding: 3rem;
+      display: grid; grid-template-columns: repeat(4, 1fr);
+    }
+
+    .stat-item {
+      text-align: center; padding: 0 2rem;
+      border-right: 1px solid var(--b-dark);
+    }
+
+    .stat-item:last-child { border-right: none; }
+
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 700;
+      color: var(--gold); line-height: 1; display: block; margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--on-dark-m); font-weight: 400;
+    }
+
+    /* ─── SECTION COMMON ─── */
+    .section { padding: 7rem 3rem; }
+    .section-light { background: var(--cream-2); color: var(--on-light); }
+    .section-cream { background: var(--cream); color: var(--on-light); }
+    .section-dark { background: var(--ink); }
+    .section-dark-2 { background: var(--ink-2); }
+
+    .container { max-width: 1300px; margin: 0 auto; }
+
+    .eyebrow {
+      display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem;
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase;
+    }
+
+    .eyebrow-dark { color: var(--gold); }
+    .eyebrow-light { color: var(--plum); }
+
+    .eyebrow::before {
+      content: ''; display: block; width: 32px; height: 1px;
+    }
+
+    .eyebrow-dark::before { background: var(--gold); }
+    .eyebrow-light::before { background: var(--plum); }
+
+    .section-headline {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 700; line-height: 1.1;
+      letter-spacing: -0.01em;
+    }
+
+    .section-headline-dark { color: var(--on-dark); }
+    .section-headline-light { color: var(--on-light); }
+
+    .divider-gold {
+      display: flex; align-items: center; gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .divider-gold::before, .divider-gold::after {
+      content: ''; flex: 1; height: 1px;
+    }
+
+    .divider-gold-dark::before, .divider-gold-dark::after { background: var(--b-dark); }
+    .divider-gold-light::before, .divider-gold-light::after { background: var(--b-light); }
+
+    .divider-gold .diamond {
+      width: 6px; height: 6px; border: 1px solid;
+      transform: rotate(45deg); flex-shrink: 0;
+    }
+
+    .divider-gold-dark .diamond { border-color: var(--gold); }
+    .divider-gold-light .diamond { border-color: var(--plum); }
+
+    /* ─── PHILOSOPHY ─── */
+    .philosophy-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center;
+    }
+
+    .philosophy-visual {
+      position: relative; display: flex; align-items: center; justify-content: center;
+    }
+
+    .philosophy-circle {
+      width: 380px; height: 380px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(107,51,153,0.15) 0%, rgba(201,164,92,0.05) 60%, transparent 100%);
+      border: 1px solid var(--b-dark);
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+
+    .philosophy-circle::before {
+      content: ''; position: absolute;
+      width: 300px; height: 300px; border-radius: 50%;
+      border: 1px solid var(--gold-dim);
+    }
+
+    .philosophy-circle svg { width: 200px; height: 200px; opacity: 0.7; animation: spin 50s linear infinite; }
+
+    .philosophy-number {
+      position: absolute; bottom: -1.5rem; right: -1.5rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 7rem; font-weight: 800; line-height: 1;
+      color: transparent; -webkit-text-stroke: 1px rgba(201,164,92,0.2);
+      pointer-events: none; user-select: none;
+    }
+
+    .philosophy-text h2 { margin-bottom: 1.5rem; }
+
+    .philosophy-text p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem; font-weight: 300; line-height: 1.85; color: var(--on-dark-m);
+      margin-bottom: 2rem;
+    }
+
+    .philosophy-pillars {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 2rem;
+    }
+
+    .pillar {
+      display: flex; align-items: flex-start; gap: 0.75rem;
+      padding: 0.9rem 1rem;
+      border: 1px solid var(--b-dark); border-radius: 2px;
+    }
+
+    .pillar-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--gold); flex-shrink: 0; margin-top: 6px;
+    }
+
+    .pillar-text {
+      font-size: 0.8rem; font-weight: 500; color: var(--on-dark); letter-spacing: 0.02em;
+    }
+
+    /* ─── PROGRAMS ─── */
+    .programs-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr;
+      gap: 1.5px;
+      background: var(--b-dark);
+    }
+
+    .prog-card {
+      background: var(--ink-card);
+      padding: 2.5rem 2rem;
+      display: flex; flex-direction: column;
+      transition: background 0.4s;
+      text-decoration: none; color: inherit;
+      position: relative; overflow: hidden;
+    }
+
+    .prog-card::before {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+      height: 2px; background: linear-gradient(90deg, var(--plum), var(--gold));
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.5s cubic-bezier(.16,1,.3,1);
+    }
+
+    .prog-card:hover { background: #221540; }
+    .prog-card:hover::before { transform: scaleX(1); }
+
+    .prog-card.featured {
+      background: linear-gradient(160deg, #1e1040 0%, #1a0f35 100%);
+      border: 1px solid var(--b-dark);
+    }
+
+    .prog-card.featured::after {
+      content: 'SIGNATURE RETREAT';
+      position: absolute; top: 1.5rem; right: 1.5rem;
+      font-size: 0.6rem; font-weight: 700; letter-spacing: 0.14em;
+      padding: 0.3rem 0.7rem; border: 1px solid var(--gold);
+      color: var(--gold);
+    }
+
+    .prog-duration {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 1rem;
+    }
+
+    .prog-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem; font-weight: 700; color: var(--on-dark);
+      margin-bottom: 0.4rem; line-height: 1.2;
+    }
+
+    .prog-card.featured h3 { font-size: 2rem; }
+
+    .prog-subtitle {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem; font-style: italic; color: var(--gold);
+      margin-bottom: 1.25rem;
+    }
+
+    .prog-desc {
+      font-size: 0.875rem; color: var(--on-dark-m); line-height: 1.75;
+      flex: 1; margin-bottom: 2rem;
+    }
+
+    .prog-price-row {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      padding-top: 1.5rem; border-top: 1px solid var(--b-dark);
+    }
+
+    .prog-price {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem; font-weight: 700; color: var(--gold); line-height: 1;
+    }
+
+    .prog-price small {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem; font-weight: 400; color: var(--on-dark-m);
+      display: block; margin-top: 0.2rem;
+    }
+
+    .prog-arrow {
+      width: 36px; height: 36px; border: 1px solid var(--b-dark);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; color: var(--gold);
+      transition: all 0.3s;
+    }
+
+    .prog-card:hover .prog-arrow { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+
+    .programs-cta {
+      text-align: center; margin-top: 3rem;
+    }
+
+    /* ─── EXPERIENCE ─── */
+    .experience-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+      background: var(--b-light); margin-top: 4rem;
+    }
+
+    .exp-item {
+      background: var(--cream-2); padding: 2.5rem 2rem;
+      transition: background 0.3s;
+    }
+
+    .exp-item:hover { background: var(--cream); }
+
+    .exp-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.75rem; font-weight: 700; color: var(--plum);
+      letter-spacing: 0.1em; margin-bottom: 1.25rem;
+    }
+
+    .exp-item h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem; font-weight: 700; color: var(--on-light);
+      margin-bottom: 0.75rem;
+    }
+
+    .exp-item p {
+      font-size: 0.875rem; color: var(--on-light-m); line-height: 1.7;
+    }
+
+    /* ─── TESTIMONIALS ─── */
+    .testimonial-large {
+      max-width: 880px; margin: 0 auto; text-align: center;
+    }
+
+    .testimonial-large blockquote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.5rem, 3.5vw, 2.6rem);
+      font-weight: 300; font-style: italic;
+      line-height: 1.5; color: var(--on-dark);
+      margin-bottom: 2.5rem;
+    }
+
+    .testimonial-large blockquote::before {
+      content: '\201C';
+      font-size: 6rem; line-height: 0.1;
+      color: var(--gold); display: block;
+      margin-bottom: 1.5rem; font-family: 'Playfair Display', serif;
+      font-style: normal;
+    }
+
+    .testimonial-author {
+      font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--gold); font-weight: 500;
+    }
+
+    .testimonial-author span { color: var(--on-dark-m); }
+
+    .testi-nav {
+      display: flex; justify-content: center; gap: 0.5rem; margin-top: 3rem;
+    }
+
+    .testi-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--b-dark); cursor: pointer; transition: all 0.3s;
+      border: 1px solid var(--b-dark);
+    }
+
+    .testi-dot.active { background: var(--gold); border-color: var(--gold); width: 24px; border-radius: 3px; }
+
+    .testi-mini-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px;
+      background: var(--b-dark); margin-top: 5rem;
+    }
+
+    .testi-mini-card {
+      background: var(--ink-card); padding: 2rem;
+    }
+
+    .testi-stars { color: var(--gold); font-size: 0.7rem; letter-spacing: 3px; margin-bottom: 1rem; }
+
+    .testi-mini-card q {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem; font-style: italic; color: var(--on-dark);
+      line-height: 1.7; display: block; margin-bottom: 1.25rem;
+    }
+
+    .testi-mini-card .author { font-size: 0.75rem; color: var(--gold); font-weight: 600; letter-spacing: 0.06em; }
+    .testi-mini-card .location { font-size: 0.72rem; color: var(--on-dark-m); margin-top: 0.2rem; }
+
+    /* ─── MODULES STRIP ─── */
+    .modules-strip {
+      display: grid; grid-template-columns: repeat(9, 1fr);
+      border-top: 1px solid var(--b-light); border-bottom: 1px solid var(--b-light);
+    }
+
+    .mod-item {
+      padding: 2rem 1rem; text-align: center;
+      border-right: 1px solid var(--b-light);
+      transition: background 0.3s;
+    }
+
+    .mod-item:last-child { border-right: none; }
+    .mod-item:hover { background: var(--cream); }
+
+    .mod-icon { font-size: 1.5rem; display: block; margin-bottom: 0.5rem; }
+    .mod-name { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--on-light-m); }
+
+    /* ─── CTA SECTION ─── */
+    .cta-section {
+      background: var(--ink-2);
+      border-top: 1px solid var(--b-dark);
+      padding: 8rem 3rem;
+      text-align: center; position: relative; overflow: hidden;
+    }
+
+    .cta-bg-mandala {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 600px; height: 600px; opacity: 0.04;
+      animation: spin 80s linear infinite;
+    }
+
+    .cta-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 700;
+      color: var(--on-dark); max-width: 700px; margin: 0 auto 1.5rem;
+      position: relative; z-index: 2;
+    }
+
+    .cta-section h2 em { font-style: italic; color: var(--gold); font-weight: 400; }
+
+    .cta-section p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem; font-weight: 300; color: var(--on-dark-m);
+      max-width: 520px; margin: 0 auto 3rem;
+      line-height: 1.8; position: relative; z-index: 2;
+    }
+
+    .cta-actions { display: flex; justify-content: center; gap: 1.25rem; flex-wrap: wrap; position: relative; z-index: 2; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: #050308;
+      border-top: 1px solid var(--b-dark);
+      padding: 5rem 3rem 2.5rem;
+    }
+
+    .footer-top {
+      max-width: 1300px; margin: 0 auto;
+      display: grid; grid-template-columns: 2.5fr 1fr 1fr 1fr 1.5fr;
+      gap: 4rem; margin-bottom: 4rem;
+    }
+
+    .footer-brand .logo { font-size: 1.4rem; display: block; margin-bottom: 1.25rem; }
+
+    .footer-brand p {
+      font-size: 0.85rem; color: var(--on-dark-m); line-height: 1.8; max-width: 280px;
+    }
+
+    .footer-brand .footer-tagline {
+      display: flex; align-items: center; gap: 0.6rem;
+      margin-top: 1.5rem; padding-top: 1.5rem;
+      border-top: 1px solid var(--b-dark);
+      font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold);
+    }
+
+    .footer-col h5 {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--on-dark); margin-bottom: 1.5rem;
+    }
+
+    .footer-col ul { list-style: none; }
+
+    .footer-col ul li { margin-bottom: 0.7rem; }
+
+    .footer-col ul li a {
+      text-decoration: none; font-size: 0.85rem; color: var(--on-dark-m);
+      transition: color 0.25s;
+    }
+
+    .footer-col ul li a:hover { color: var(--gold); }
+
+    .footer-contact-item {
+      display: flex; gap: 0.75rem; margin-bottom: 0.9rem;
+    }
+
+    .footer-contact-item .icon {
+      width: 18px; color: var(--gold); flex-shrink: 0; font-size: 0.85rem; margin-top: 1px;
+    }
+
+    .footer-contact-item a, .footer-contact-item span {
+      font-size: 0.82rem; color: var(--on-dark-m); text-decoration: none; line-height: 1.5;
+    }
+
+    .footer-contact-item a:hover { color: var(--gold); }
+
+    .footer-bottom {
+      max-width: 1300px; margin: 0 auto;
+      padding-top: 2rem; border-top: 1px solid var(--b-dark);
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+    }
+
+    .footer-bottom p { font-size: 0.78rem; color: var(--on-dark-m); }
+
+    .footer-legal { display: flex; gap: 2rem; }
+
+    .footer-legal a {
+      font-size: 0.78rem; color: var(--on-dark-m); text-decoration: none; transition: color 0.2s;
+    }
+
+    .footer-legal a:hover { color: var(--gold); }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .reveal {
+      opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s cubic-bezier(.16,1,.3,1);
+    }
+
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 1100px) {
+      .programs-grid { grid-template-columns: 1fr; }
+      .stat-strip { grid-template-columns: 1fr 1fr; gap: 0; }
+      .stat-item:nth-child(2) { border-right: none; }
+      .stat-item:nth-child(3) { border-top: 1px solid var(--b-dark); }
+      .stat-item:nth-child(4) { border-top: 1px solid var(--b-dark); border-right: none; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+      .modules-strip { grid-template-columns: repeat(3, 1fr); }
+      .experience-grid { grid-template-columns: 1fr 1fr; }
+      .philosophy-grid { grid-template-columns: 1fr; }
+      .philosophy-circle { width: 280px; height: 280px; margin: 0 auto 3rem; }
+    }
+
+    @media (max-width: 768px) {
+      header { padding: 0 1.5rem; }
+      .nav-links { display: none; }
+      .nav-links.open {
+        display: flex; flex-direction: column; gap: 0;
+        position: fixed; top: 76px; left: 0; right: 0;
+        background: rgba(14,8,23,0.97); backdrop-filter: blur(24px);
+        padding: 2rem 1.5rem; border-bottom: 1px solid var(--b-dark);
+      }
+      .nav-links.open a { padding: 0.75rem 0; border-bottom: 1px solid var(--b-dark); }
+      .hamburger { display: flex; }
+      .hero { padding: 0 1.5rem; }
+      .section { padding: 5rem 1.5rem; }
+      .stat-strip { padding: 2rem 1.5rem; }
+      .testi-mini-grid { grid-template-columns: 1fr; }
+      .experience-grid { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr; gap: 2.5rem; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+      .cta-section { padding: 5rem 1.5rem; }
+      .modules-strip { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 500px) {
+      .modules-strip { grid-template-columns: repeat(3, 1fr); }
+      .philosophy-pillars { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- ─── HEADER ─── -->
+  <header id="header">
+    <a href="index.html" class="logo">Nirvana Trails</a>
+    <nav class="nav-links" id="nav">
+      <a href="retreats.html">Retreats</a>
+      <a href="about.html">About</a>
+      <a href="index.html#testimonials">Testimonials</a>
+      <a href="contact.html">Contact</a>
+      <a href="booking.html" class="nav-book">Book a Retreat</a>
+    </nav>
+    <button class="hamburger" id="ham" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <!-- ─── HERO ─── -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+
+    <!-- Background mandalas -->
+    <svg class="hero-mandala" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="200" cy="200" r="197" stroke="#c9a45c" stroke-width="0.5" stroke-dasharray="3 6"/>
+      <circle cx="200" cy="200" r="180" stroke="#c9a45c" stroke-width="0.3"/>
+      <circle cx="200" cy="200" r="155" stroke="#c9a45c" stroke-width="0.5" stroke-dasharray="2 4"/>
+      <circle cx="200" cy="200" r="130" stroke="#c9a45c" stroke-width="0.3"/>
+      <circle cx="200" cy="200" r="105" stroke="#c9a45c" stroke-width="0.5"/>
+      <circle cx="200" cy="200" r="80"  stroke="#c9a45c" stroke-width="0.3" stroke-dasharray="2 4"/>
+      <circle cx="200" cy="200" r="55"  stroke="#c9a45c" stroke-width="0.5"/>
+      <circle cx="200" cy="200" r="30"  stroke="#c9a45c" stroke-width="0.3"/>
+      <g opacity="0.7">
+        <ellipse cx="200" cy="45" rx="12" ry="30" fill="#c9a45c"/>
+        <ellipse cx="200" cy="355" rx="12" ry="30" fill="#c9a45c"/>
+        <ellipse cx="45" cy="200" rx="30" ry="12" fill="#c9a45c"/>
+        <ellipse cx="355" cy="200" rx="30" ry="12" fill="#c9a45c"/>
+        <ellipse cx="96" cy="96" rx="12" ry="30" fill="#c9a45c" transform="rotate(45 96 96)"/>
+        <ellipse cx="304" cy="96" rx="12" ry="30" fill="#c9a45c" transform="rotate(-45 304 96)"/>
+        <ellipse cx="96" cy="304" rx="12" ry="30" fill="#c9a45c" transform="rotate(-45 96 304)"/>
+        <ellipse cx="304" cy="304" rx="12" ry="30" fill="#c9a45c" transform="rotate(45 304 304)"/>
+      </g>
+      <g opacity="0.4">
+        <ellipse cx="200" cy="105" rx="8" ry="20" fill="#9b6cd4"/>
+        <ellipse cx="200" cy="295" rx="8" ry="20" fill="#9b6cd4"/>
+        <ellipse cx="105" cy="200" rx="20" ry="8" fill="#9b6cd4"/>
+        <ellipse cx="295" cy="200" rx="20" ry="8" fill="#9b6cd4"/>
+        <ellipse cx="145" cy="145" rx="8" ry="20" fill="#9b6cd4" transform="rotate(45 145 145)"/>
+        <ellipse cx="255" cy="145" rx="8" ry="20" fill="#9b6cd4" transform="rotate(-45 255 145)"/>
+        <ellipse cx="145" cy="255" rx="8" ry="20" fill="#9b6cd4" transform="rotate(-45 145 255)"/>
+        <ellipse cx="255" cy="255" rx="8" ry="20" fill="#9b6cd4" transform="rotate(45 255 255)"/>
+      </g>
+      <circle cx="200" cy="200" r="8" fill="#c9a45c" opacity="0.8"/>
+      <line x1="200" y1="3" x2="200" y2="397" stroke="#c9a45c" stroke-width="0.2" opacity="0.3"/>
+      <line x1="3" y1="200" x2="397" y2="200" stroke="#c9a45c" stroke-width="0.2" opacity="0.3"/>
+      <line x1="59" y1="59" x2="341" y2="341" stroke="#c9a45c" stroke-width="0.2" opacity="0.3"/>
+      <line x1="341" y1="59" x2="59" y2="341" stroke="#c9a45c" stroke-width="0.2" opacity="0.3"/>
+    </svg>
+
+    <svg class="hero-mandala-inner" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="200" cy="200" r="190" stroke="#9b6cd4" stroke-width="0.4" stroke-dasharray="4 8"/>
+      <circle cx="200" cy="200" r="150" stroke="#9b6cd4" stroke-width="0.4"/>
+      <circle cx="200" cy="200" r="110" stroke="#c9a45c" stroke-width="0.6"/>
+      <circle cx="200" cy="200" r="70"  stroke="#9b6cd4" stroke-width="0.4"/>
+      <circle cx="200" cy="200" r="30"  stroke="#c9a45c" stroke-width="0.6"/>
+    </svg>
+
+    <div class="hero-content">
+      <div class="hero-eyebrow">India's Premier Transformational Retreat</div>
+      <h1>
+        Where Ancient<br />
+        Wisdom Meets<br />
+        <em>Deep Healing</em>
+      </h1>
+      <p class="hero-sub">
+        A sacred 15-day immersion in India — combining Vedic astrology,
+        chakra mastery, sound healing, and Akashic Records to reset your life
+        from the inside out.
+      </p>
+      <div class="hero-actions">
+        <a href="retreats.html" class="btn-gold">Explore Retreats <span>→</span></a>
+        <a href="about.html" class="btn-ghost">Our Philosophy</a>
+      </div>
+    </div>
+
+    <div class="hero-scroll">
+      <span class="line"></span>
+      <span>Scroll to discover</span>
+    </div>
+  </section>
+
+  <!-- ─── STATS STRIP ─── -->
+  <div class="stat-strip reveal">
+    <div class="stat-item">
+      <span class="stat-number">2,000+</span>
+      <span class="stat-label">Lives Transformed</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number">45+</span>
+      <span class="stat-label">Countries Served</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number">95%</span>
+      <span class="stat-label">Transformation Rate</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number">9</span>
+      <span class="stat-label">Complete Modules</span>
+    </div>
+  </div>
+
+  <!-- ─── PHILOSOPHY ─── -->
+  <section class="section section-dark">
+    <div class="container">
+      <div class="philosophy-grid">
+        <div class="philosophy-visual reveal">
+          <div class="philosophy-circle">
+            <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="200" cy="200" r="190" stroke="#c9a45c" stroke-width="0.8" stroke-dasharray="4 8"/>
+              <circle cx="200" cy="200" r="150" stroke="#c9a45c" stroke-width="0.5"/>
+              <circle cx="200" cy="200" r="110" stroke="#c9a45c" stroke-width="0.8"/>
+              <circle cx="200" cy="200" r="70"  stroke="#c9a45c" stroke-width="0.5"/>
+              <g opacity="0.6">
+                <ellipse cx="200" cy="50" rx="10" ry="28" fill="#c9a45c"/>
+                <ellipse cx="200" cy="350" rx="10" ry="28" fill="#c9a45c"/>
+                <ellipse cx="50" cy="200" rx="28" ry="10" fill="#c9a45c"/>
+                <ellipse cx="350" cy="200" rx="28" ry="10" fill="#c9a45c"/>
+              </g>
+              <g opacity="0.4">
+                <ellipse cx="200" cy="100" rx="7" ry="18" fill="#9b6cd4"/>
+                <ellipse cx="200" cy="300" rx="7" ry="18" fill="#9b6cd4"/>
+                <ellipse cx="100" cy="200" rx="18" ry="7" fill="#9b6cd4"/>
+                <ellipse cx="300" cy="200" rx="18" ry="7" fill="#9b6cd4"/>
+              </g>
+              <circle cx="200" cy="200" r="10" fill="#c9a45c"/>
+            </svg>
+            <span class="philosophy-number">9</span>
+          </div>
+        </div>
+
+        <div class="philosophy-text reveal reveal-delay-2">
+          <div class="eyebrow eyebrow-dark">Our Philosophy</div>
+          <h2 class="section-headline section-headline-dark">
+            Transformation is not a Weekend Event
+          </h2>
+          <div class="divider-gold divider-gold-dark"><span class="diamond"></span></div>
+          <p>
+            True, lasting change requires immersion — a complete pause from the ordinary world,
+            long enough for the nervous system to release what it has been holding for years.
+            We designed Nirvana Trails around this understanding.
+          </p>
+          <p>
+            Our 9-module methodology draws from Vedic science, modern neuroscience, and
+            lineages of healing wisdom passed down across centuries. Each element is purposeful.
+            Nothing is decorative.
+          </p>
+          <div class="philosophy-pillars">
+            <div class="pillar"><div class="pillar-dot"></div><span class="pillar-text">Chakra System Mastery</span></div>
+            <div class="pillar"><div class="pillar-dot"></div><span class="pillar-text">Sound Healing Science</span></div>
+            <div class="pillar"><div class="pillar-dot"></div><span class="pillar-text">Vedic Astrology</span></div>
+            <div class="pillar"><div class="pillar-dot"></div><span class="pillar-text">Akashic Records</span></div>
+            <div class="pillar"><div class="pillar-dot"></div><span class="pillar-text">Nervous System Reset</span></div>
+            <div class="pillar"><div class="pillar-dot"></div><span class="pillar-text">Sattvic Lifestyle</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── MODULES STRIP ─── -->
+  <div class="modules-strip section-light reveal">
+    <div class="mod-item"><span class="mod-icon">🌊</span><span class="mod-name">Stress Reset</span></div>
+    <div class="mod-item"><span class="mod-icon">🔮</span><span class="mod-name">Chakra Work</span></div>
+    <div class="mod-item"><span class="mod-icon">✨</span><span class="mod-name">Aura Healing</span></div>
+    <div class="mod-item"><span class="mod-icon">🎵</span><span class="mod-name">Sound Medicine</span></div>
+    <div class="mod-item"><span class="mod-icon">🥗</span><span class="mod-name">Sattvic Life</span></div>
+    <div class="mod-item"><span class="mod-icon">🌑</span><span class="mod-name">Occult Arts</span></div>
+    <div class="mod-item"><span class="mod-icon">⭐</span><span class="mod-name">Vedic Astro</span></div>
+    <div class="mod-item"><span class="mod-icon">🔢</span><span class="mod-name">Numerology</span></div>
+    <div class="mod-item"><span class="mod-icon">📖</span><span class="mod-name">Akashic Records</span></div>
+  </div>
+
+  <!-- ─── PROGRAMS ─── -->
+  <section class="section section-dark-2">
+    <div class="container">
+      <div class="reveal">
+        <div class="eyebrow eyebrow-dark">Our Retreats</div>
+        <h2 class="section-headline section-headline-dark">Choose Your Journey</h2>
+        <div class="divider-gold divider-gold-dark" style="max-width:200px;"><span class="diamond"></span></div>
+      </div>
+
+      <div class="programs-grid reveal reveal-delay-1" style="margin-top:3rem;">
+
+        <a href="product-detail.html?product=15day" class="prog-card featured">
+          <div class="prog-duration">15 Days · Our Signature</div>
+          <h3>The Complete Immersion</h3>
+          <p class="prog-subtitle">Total Life Transformation</p>
+          <p class="prog-desc">
+            Our flagship program — 9 comprehensive modules, 60+ hours of expert teaching,
+            personal Kundli analysis, Akashic Records session, and a complete inner reset
+            across 15 transformational days.
+          </p>
+          <div class="prog-price-row">
+            <div class="prog-price">$4,500<small>from · per person</small></div>
+            <div class="prog-arrow">→</div>
+          </div>
+        </a>
+
+        <a href="product-detail.html?product=3day" class="prog-card">
+          <div class="prog-duration">3 Days · Entry Point</div>
+          <h3>Weekend Intensive</h3>
+          <p class="prog-subtitle">The First Step</p>
+          <p class="prog-desc">
+            A powerful weekend immersion in stress relief, sound healing, and chakra introduction.
+            The gateway into deeper transformation.
+          </p>
+          <div class="prog-price-row">
+            <div class="prog-price">$1,200<small>from · per person</small></div>
+            <div class="prog-arrow">→</div>
+          </div>
+        </a>
+
+        <a href="product-detail.html?product=21day" class="prog-card">
+          <div class="prog-duration">21 Days · Advanced</div>
+          <h3>Total Mastery</h3>
+          <p class="prog-subtitle">For the Committed Seeker</p>
+          <p class="prog-desc">
+            The ultimate deep-dive — past life regression, advanced occult sciences, multiple
+            Akashic sessions, and 6 months of post-retreat mentoring.
+          </p>
+          <div class="prog-price-row">
+            <div class="prog-price">$9,500<small>from · per person</small></div>
+            <div class="prog-arrow">→</div>
+          </div>
+        </a>
+
+      </div>
+
+      <div class="programs-cta reveal">
+        <a href="retreats.html" class="btn-ghost" style="border-color:var(--b-dark);">View All 6 Programs →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── EXPERIENCE ─── -->
+  <section class="section section-cream" id="experience">
+    <div class="container">
+      <div class="reveal">
+        <div class="eyebrow eyebrow-light">The Experience</div>
+        <h2 class="section-headline section-headline-light">What Awaits You in India</h2>
+        <div class="divider-gold divider-gold-light" style="max-width:200px;"><span class="diamond"></span></div>
+      </div>
+
+      <div class="experience-grid">
+        <div class="exp-item reveal">
+          <div class="exp-num">01 / Morning</div>
+          <h4>Sacred Mornings</h4>
+          <p>Each day begins before sunrise with pranayama, movement, and morning meditation as the world stirs quietly around you.</p>
+        </div>
+        <div class="exp-item reveal reveal-delay-1">
+          <div class="exp-num">02 / Teaching</div>
+          <h4>Deep Immersion</h4>
+          <p>Mornings and afternoons are devoted to module teaching — expert-led sessions that build upon each other with precision.</p>
+        </div>
+        <div class="exp-item reveal reveal-delay-2">
+          <div class="exp-num">03 / Healing</div>
+          <h4>Individual Sessions</h4>
+          <p>Personal energy healing sessions, Kundli readings, and 1:1 facilitator consultations tailored to your specific needs.</p>
+        </div>
+        <div class="exp-item reveal">
+          <div class="exp-num">04 / Nourishment</div>
+          <h4>Sattvic Cuisine</h4>
+          <p>Every meal is a healing act — Ayurvedically prepared sattvic food that restores the body and quiets the mind.</p>
+        </div>
+        <div class="exp-item reveal reveal-delay-1">
+          <div class="exp-num">05 / Evening</div>
+          <h4>Sound Journeys</h4>
+          <p>Evenings close with deep sound bath immersions — Tibetan bowls, crystal singing bowls, and the healing silence that follows.</p>
+        </div>
+        <div class="exp-item reveal reveal-delay-2">
+          <div class="exp-num">06 / Integration</div>
+          <h4>Lifelong Support</h4>
+          <p>Alumni community access, post-retreat integration support, and resources to sustain your transformation beyond the retreat.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── TESTIMONIALS ─── -->
+  <section class="section section-dark" id="testimonials">
+    <div class="container">
+      <div class="reveal" style="text-align:center; margin-bottom:5rem;">
+        <div class="eyebrow eyebrow-dark" style="justify-content:center;">Client Stories</div>
+        <h2 class="section-headline section-headline-dark">Lives Transformed</h2>
+      </div>
+
+      <div class="testimonial-large reveal" id="testi-container">
+        <blockquote id="testi-quote">
+          The 15-day program was the single most profound experience of my life.
+          I arrived exhausted and broken. I left feeling more alive than I have in 20 years.
+          My relationships, career, and health — all transformed.
+        </blockquote>
+        <div class="testimonial-author" id="testi-author">
+          Sarah M. — <span>Marketing Director · New York, USA</span>
+        </div>
+        <div class="testi-nav">
+          <button class="testi-dot active" data-idx="0" aria-label="Testimonial 1"></button>
+          <button class="testi-dot" data-idx="1" aria-label="Testimonial 2"></button>
+          <button class="testi-dot" data-idx="2" aria-label="Testimonial 3"></button>
+          <button class="testi-dot" data-idx="3" aria-label="Testimonial 4"></button>
+        </div>
+      </div>
+
+      <div class="testi-mini-grid reveal" style="margin-top:5rem;">
+        <div class="testi-mini-card">
+          <div class="testi-stars">★★★★★</div>
+          <q>I was skeptical of chakras and Akashic Records. The science behind what they teach is undeniable and the results speak for themselves. I came home a different man.</q>
+          <div class="author">James R.</div>
+          <div class="location">Tech Entrepreneur · London, UK</div>
+        </div>
+        <div class="testi-mini-card">
+          <div class="testi-stars">★★★★★</div>
+          <q>My husband and I did the couples retreat for our anniversary. It healed wounds neither of us knew we were carrying. We left with tools to support each other we never had.</q>
+          <div class="author">Priya &amp; Arjun K.</div>
+          <div class="location">Couple · Dubai, UAE</div>
+        </div>
+        <div class="testi-mini-card">
+          <div class="testi-stars">★★★★★</div>
+          <q>After 30 years in corporate finance, I was burnt out. The 21-day mastery didn't just help me recover — it helped me discover who I actually am. Worth every penny.</q>
+          <div class="author">David L.</div>
+          <div class="location">CFO · Singapore</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CTA ─── -->
+  <section class="cta-section">
+    <svg class="cta-bg-mandala" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="200" cy="200" r="195" stroke="#c9a45c" stroke-width="0.6"/>
+      <circle cx="200" cy="200" r="160" stroke="#c9a45c" stroke-width="0.4"/>
+      <circle cx="200" cy="200" r="125" stroke="#c9a45c" stroke-width="0.6"/>
+      <circle cx="200" cy="200" r="90" stroke="#c9a45c" stroke-width="0.4"/>
+    </svg>
+    <div class="container" style="position:relative; z-index:2;">
+      <div class="eyebrow eyebrow-dark reveal" style="justify-content:center;">Begin Your Journey</div>
+      <h2 class="reveal">
+        Ready for Your<br />
+        <em>Transformation?</em>
+      </h2>
+      <p class="reveal reveal-delay-1">
+        Limited places available per retreat. Each program is intentionally kept intimate
+        to ensure every participant receives transformative personal attention.
+      </p>
+      <div class="cta-actions reveal reveal-delay-2">
+        <a href="booking.html" class="btn-gold">Reserve Your Place</a>
+        <a href="retreats.html" class="btn-ghost">Explore All Programs</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer>
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="logo">Nirvana Trails</a>
+        <p>
+          Transformational wellness retreats combining ancient Vedic wisdom with modern healing science.
+          Serving seekers across 45+ countries since our founding.
+        </p>
+        <div class="footer-tagline">
+          <span>◆</span> Premium Retreat · India
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h5>Programs</h5>
+        <ul>
+          <li><a href="product-detail.html?product=3day">3-Day Intensive</a></li>
+          <li><a href="product-detail.html?product=7day">7-Day Program</a></li>
+          <li><a href="product-detail.html?product=15day">15-Day Immersion</a></li>
+          <li><a href="product-detail.html?product=21day">21-Day Mastery</a></li>
+          <li><a href="product-detail.html?product=online">Online 12-Week</a></li>
+          <li><a href="product-detail.html?product=couples">Couples Retreat</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>Company</h5>
+        <ul>
+          <li><a href="about.html">Our Story</a></li>
+          <li><a href="about.html#team">Facilitators</a></li>
+          <li><a href="retreats.html">All Retreats</a></li>
+          <li><a href="index.html#testimonials">Testimonials</a></li>
+          <li><a href="#">Blog &amp; Journal</a></li>
+          <li><a href="#">FAQ</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>Legal</h5>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Cancellation Policy</a></li>
+          <li><a href="#">Cookie Policy</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>Contact</h5>
+        <div class="footer-contact-item">
+          <span class="icon">✉</span>
+          <a href="mailto:retreats@nirvanatrails.com">retreats@nirvanatrails.com</a>
+        </div>
+        <div class="footer-contact-item">
+          <span class="icon">✉</span>
+          <a href="mailto:corporate@nirvanatrails.com">corporate@nirvanatrails.com</a>
+        </div>
+        <div class="footer-contact-item">
+          <span class="icon">☎</span>
+          <a href="tel:+911234567890">+91 (123) 456-7890</a>
+        </div>
+        <div class="footer-contact-item">
+          <span class="icon">◷</span>
+          <span>Mon–Fri 9AM–6PM IST<br/>Sat–Sun 10AM–4PM IST</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2025 Nirvana Trails. All rights reserved.</p>
+      <div class="footer-legal">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="contact.html">Contact</a>
+        <a href="sitemap.html">Sitemap</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Header scroll
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('scrolled', window.scrollY > 60);
+    }, { passive: true });
+
+    // Hamburger
+    const ham = document.getElementById('ham');
+    const nav = document.getElementById('nav');
+    ham.addEventListener('click', () => nav.classList.toggle('open'));
+    nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
+
+    // Reveal on scroll
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+    reveals.forEach(el => observer.observe(el));
+
+    // Testimonial rotator
+    const testimonials = [
+      { q: 'The 15-day program was the single most profound experience of my life. I arrived exhausted and broken. I left feeling more alive than I have in 20 years. My relationships, career, and health — all transformed.', a: 'Sarah M.', loc: 'Marketing Director · New York, USA' },
+      { q: 'I was skeptical at first — chakras and Akashic Records seemed far out to me. But the science behind what they teach is undeniable. I came home a different man, with tools I use every single day.', a: 'James R.', loc: 'Tech Entrepreneur · London, UK' },
+      { q: 'My husband and I did the couples retreat for our anniversary. It healed wounds neither of us knew we were carrying. We left with tools to support each other in ways we never had before. Deeply recommended.', a: 'Priya & Arjun K.', loc: 'Couple · Dubai, UAE' },
+      { q: 'After 30 years in corporate finance, I was burnt out beyond recovery — or so I thought. The 21-day mastery program didn\'t just help me recover. It helped me discover who I actually am.', a: 'David L.', loc: 'CFO · Singapore' },
+    ];
+
+    let currentTesti = 0;
+    const qEl = document.getElementById('testi-quote');
+    const aEl = document.getElementById('testi-author');
+    const dots = document.querySelectorAll('.testi-dot');
+
+    function showTesti(idx) {
+      currentTesti = idx;
+      const t = testimonials[idx];
+      qEl.style.opacity = '0';
+      setTimeout(() => {
+        qEl.textContent = t.q;
+        aEl.innerHTML = `${t.a} — <span>${t.loc}</span>`;
+        qEl.style.opacity = '1';
+      }, 300);
+      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    }
+
+    dots.forEach(d => d.addEventListener('click', () => showTesti(+d.dataset.idx)));
+    qEl.style.transition = 'opacity 0.3s';
+    setInterval(() => showTesti((currentTesti + 1) % testimonials.length), 6000);
+  </script>
+</body>
+</html>

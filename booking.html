@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book a Retreat — Nirvana Trails</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,800;1,400;1,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    :root {
+      --ink:#0e0817; --ink-2:#160f26; --ink-card:#1c1232;
+      --gold:#c9a45c; --gold-pale:#e8c88a; --gold-dim:rgba(201,164,92,0.18);
+      --cream:#f5ede0; --cream-2:#faf6f0;
+      --plum:#6b3399; --plum-lt:#9b6cd4;
+      --on-dark:#f0e6d3; --on-dark-m:rgba(240,230,211,0.55);
+      --on-light:#1a1218; --on-light-m:#6b5868;
+      --b-dark:rgba(201,164,92,0.16); --b-light:rgba(107,51,153,0.12);
+      --error:#e05252; --success:#5aab82;
+    }
+    html { scroll-behavior:smooth; }
+    body { font-family:'Inter',sans-serif; background:var(--ink); color:var(--on-dark); overflow-x:hidden; min-height:100svh; }
+    .grain { position:fixed; inset:0; z-index:9999; pointer-events:none; opacity:0.028;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)'/%3E%3C/svg%3E"); }
+
+    /* HEADER */
+    header { position:fixed; top:0; left:0; right:0; z-index:500; padding:0 3rem; height:76px; display:flex; align-items:center; justify-content:space-between; background:rgba(14,8,23,0.92); backdrop-filter:blur(24px); border-bottom:1px solid var(--b-dark); }
+    .logo { font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); text-decoration:none; }
+    .nav-links { display:flex; align-items:center; gap:2.5rem; }
+    .nav-links a { text-decoration:none; font-size:0.8rem; font-weight:500; letter-spacing:0.06em; text-transform:uppercase; color:var(--on-dark-m); transition:color 0.3s; }
+    .nav-links a:hover { color:var(--gold); }
+    .hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; padding:6px; }
+    .hamburger span { display:block; width:22px; height:1.5px; background:var(--on-dark); }
+
+    /* PAGE LAYOUT */
+    .page-wrap { padding-top:76px; display:grid; grid-template-columns:1fr 360px; min-height:100svh; }
+
+    .form-area { padding:4rem 3rem; border-right:1px solid var(--b-dark); }
+
+    .page-title { margin-bottom:3rem; }
+    .step-eyebrow { font-size:0.68rem; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold); display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem; }
+    .step-eyebrow::before { content:''; display:block; width:24px; height:1px; background:var(--gold); }
+    .page-title h1 { font-family:'Playfair Display',serif; font-size:clamp(2rem,4vw,3rem); font-weight:700; color:var(--on-dark); margin-bottom:0.4rem; }
+    .page-title p { font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:300; color:var(--on-dark-m); }
+
+    /* STEP PROGRESS */
+    .progress-bar { display:flex; align-items:stretch; gap:0; margin-bottom:3rem; }
+    .prog-step { flex:1; position:relative; }
+    .prog-step-inner { display:flex; flex-direction:column; align-items:center; gap:0.4rem; padding:0.75rem 0.5rem; cursor:pointer; }
+    .prog-num { width:28px; height:28px; border-radius:50%; border:1px solid var(--b-dark); display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; color:var(--on-dark-m); transition:all 0.3s; }
+    .prog-label { font-size:0.62rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--on-dark-m); text-align:center; transition:color 0.3s; }
+    .prog-step.active .prog-num { background:var(--gold); border-color:var(--gold); color:var(--ink); }
+    .prog-step.active .prog-label { color:var(--gold); }
+    .prog-step.done .prog-num { background:transparent; border-color:var(--gold); color:var(--gold); }
+    .prog-step.done .prog-label { color:var(--gold); opacity:0.6; }
+    .prog-connector { flex:none; width:40px; display:flex; align-items:center; padding-bottom:1rem; }
+    .prog-connector::after { content:''; display:block; width:100%; height:1px; background:var(--b-dark); }
+
+    /* FORM SECTIONS */
+    .form-section { display:none; animation:fadeUp 0.4s ease both; }
+    .form-section.active { display:block; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+    .form-block { background:var(--ink-2); border:1px solid var(--b-dark); border-radius:2px; padding:2.5rem; margin-bottom:1.5rem; }
+    .form-block-title { font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700; color:var(--on-dark); margin-bottom:0.3rem; }
+    .form-block-sub { font-size:0.82rem; color:var(--on-dark-m); margin-bottom:2rem; }
+
+    .form-row-2 { display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; }
+
+    .form-group { margin-bottom:1.25rem; }
+    .form-group:last-child { margin-bottom:0; }
+
+    .form-group label { display:block; font-size:0.78rem; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:var(--on-dark-m); margin-bottom:0.5rem; }
+    .form-group label .req { color:var(--gold); margin-left:2px; }
+
+    .form-group input, .form-group select, .form-group textarea {
+      width:100%; padding:0.8rem 1rem;
+      background:var(--ink); border:1px solid var(--b-dark); border-radius:2px;
+      font-family:'Inter',sans-serif; font-size:0.9rem; color:var(--on-dark);
+      outline:none; transition:border-color 0.25s,box-shadow 0.25s;
+      appearance:none; -webkit-appearance:none;
+    }
+    .form-group select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23c9a45c' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 1rem center; padding-right:2.5rem; cursor:pointer; }
+    .form-group input::placeholder, .form-group textarea::placeholder { color:var(--on-dark-m); opacity:0.5; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:var(--gold); box-shadow:0 0 0 3px rgba(201,164,92,0.12); }
+    .form-group input.err, .form-group select.err, .form-group textarea.err { border-color:var(--error); }
+    .form-group .err-text { font-size:0.72rem; color:var(--error); margin-top:0.4rem; display:none; }
+    .form-group .err-text.show { display:block; }
+    .form-group textarea { resize:vertical; min-height:110px; }
+
+    /* ADDON CARDS */
+    .addon-list { display:flex; flex-direction:column; gap:0.75rem; }
+    .addon-item { display:flex; align-items:flex-start; gap:1rem; padding:1.25rem 1.5rem; border:1px solid var(--b-dark); border-radius:2px; cursor:pointer; transition:border-color 0.25s,background 0.25s; }
+    .addon-item:hover { border-color:var(--gold); background:rgba(201,164,92,0.04); }
+    .addon-item:has(input:checked) { border-color:var(--gold); background:rgba(201,164,92,0.06); }
+    .addon-item input[type="checkbox"] { width:16px; height:16px; accent-color:var(--gold); cursor:pointer; flex-shrink:0; margin-top:2px; }
+    .addon-item label { cursor:pointer; flex:1; }
+    .addon-name { display:block; font-weight:600; font-size:0.9rem; color:var(--on-dark); }
+    .addon-desc { display:block; font-size:0.8rem; color:var(--on-dark-m); margin-top:0.2rem; line-height:1.5; }
+    .addon-price { font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--gold); white-space:nowrap; align-self:center; flex-shrink:0; }
+
+    /* PAYMENT */
+    .payment-summary-table { width:100%; border-collapse:collapse; margin-bottom:1.5rem; }
+    .payment-summary-table td { padding:0.65rem 0; font-size:0.875rem; border-bottom:1px solid var(--b-dark); color:var(--on-dark-m); }
+    .payment-summary-table tr:last-child td { border-bottom:none; font-weight:700; color:var(--gold); font-size:1rem; }
+    .payment-summary-table td:last-child { text-align:right; color:var(--on-dark); }
+    .payment-summary-table tr:last-child td:last-child { color:var(--gold); font-family:'Playfair Display',serif; font-size:1.4rem; }
+
+    .payment-info-box { border:1px solid var(--gold-dim); border-radius:2px; padding:1.25rem; background:rgba(201,164,92,0.04); margin-bottom:1.5rem; font-size:0.82rem; color:var(--on-dark-m); line-height:1.7; }
+    .payment-info-box strong { color:var(--gold); }
+
+    .pay-methods { display:flex; gap:0.75rem; margin-bottom:1.5rem; }
+    .pay-method { flex:1; padding:0.9rem 1rem; border:1px solid var(--b-dark); border-radius:2px; display:flex; align-items:center; gap:0.6rem; cursor:pointer; transition:border-color 0.25s; }
+    .pay-method:has(input:checked) { border-color:var(--gold); background:rgba(201,164,92,0.04); }
+    .pay-method input { accent-color:var(--gold); cursor:pointer; }
+    .pay-method label { cursor:pointer; font-size:0.875rem; font-weight:500; }
+
+    .terms-row { display:flex; align-items:flex-start; gap:0.75rem; margin-bottom:1.5rem; }
+    .terms-row input { width:16px; height:16px; accent-color:var(--gold); cursor:pointer; flex-shrink:0; margin-top:3px; }
+    .terms-row label { font-size:0.8rem; color:var(--on-dark-m); line-height:1.6; cursor:pointer; }
+    .terms-row label a { color:var(--gold); text-decoration:none; }
+
+    /* ACTION BUTTONS */
+    .form-actions { display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap; margin-top:1.5rem; }
+    .btn-back { background:transparent; border:1px solid var(--b-dark); color:var(--on-dark-m); padding:0.75rem 1.75rem; border-radius:2px; font-size:0.8rem; font-weight:500; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer; font-family:'Inter',sans-serif; transition:all 0.25s; }
+    .btn-back:hover { border-color:var(--on-dark-m); color:var(--on-dark); }
+    .btn-next { background:var(--ink-card); border:1px solid var(--b-dark); color:var(--on-dark); padding:0.75rem 2rem; border-radius:2px; font-size:0.8rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; font-family:'Inter',sans-serif; transition:all 0.3s; }
+    .btn-next:hover { border-color:var(--gold); color:var(--gold); }
+    .btn-submit { background:var(--gold); color:var(--ink); padding:0.9rem 2.5rem; border:none; border-radius:2px; font-size:0.82rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; font-family:'Inter',sans-serif; transition:all 0.4s; }
+    .btn-submit:hover { background:var(--gold-pale); transform:translateY(-2px); box-shadow:0 12px 40px rgba(201,164,92,0.3); }
+
+    /* SIDEBAR */
+    .booking-sidebar { padding:4rem 2.5rem; position:sticky; top:76px; height:calc(100svh - 76px); overflow-y:auto; display:flex; flex-direction:column; gap:1.5rem; }
+
+    .sidebar-block { border:1px solid var(--b-dark); border-radius:2px; padding:1.75rem; background:var(--ink-2); }
+    .sidebar-block h3 { font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; color:var(--on-dark); margin-bottom:1.25rem; padding-bottom:0.75rem; border-bottom:1px solid var(--b-dark); letter-spacing:0.04em; }
+
+    .sb-program-name { font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700; color:var(--on-dark); }
+    .sb-program-date { font-size:0.78rem; color:var(--on-dark-m); margin-top:0.25rem; }
+    .sb-program-accom { font-size:0.78rem; color:var(--on-dark-m); margin-top:0.1rem; }
+
+    .sb-total-label { font-size:0.65rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--on-dark-m); margin-top:1.25rem; display:block; }
+    .sb-total-amount { font-family:'Playfair Display',serif; font-size:2.4rem; font-weight:700; color:var(--gold); line-height:1; display:block; margin-top:0.25rem; }
+
+    .sb-deposit-row { display:flex; justify-content:space-between; font-size:0.8rem; color:var(--on-dark-m); margin-top:1rem; padding-top:1rem; border-top:1px solid var(--b-dark); }
+    .sb-deposit-amount { color:var(--on-dark); font-weight:600; }
+
+    .sb-help-link { display:block; color:var(--gold); text-decoration:none; font-size:0.8rem; font-weight:500; margin-top:0.5rem; transition:opacity 0.2s; }
+    .sb-help-link:hover { opacity:0.7; }
+    .sb-help-hours { font-size:0.72rem; color:var(--on-dark-m); margin-top:0.75rem; line-height:1.6; }
+
+    /* SUCCESS */
+    .success-screen { display:none; text-align:center; padding:4rem 2rem; }
+    .success-screen.show { display:flex; flex-direction:column; align-items:center; }
+    .success-icon { font-size:4rem; margin-bottom:2rem; }
+    .success-screen h2 { font-family:'Playfair Display',serif; font-size:2.5rem; font-weight:700; color:var(--on-dark); margin-bottom:1rem; }
+    .success-screen p { font-family:'Cormorant Garamond',serif; font-size:1.15rem; font-weight:300; color:var(--on-dark-m); max-width:520px; line-height:1.8; margin-bottom:1.5rem; }
+    .success-home { display:inline-flex; padding:0.9rem 2.4rem; background:var(--gold); color:var(--ink); font-size:0.8rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; text-decoration:none; border-radius:2px; transition:all 0.4s; margin-top:1rem; }
+    .success-home:hover { background:var(--gold-pale); }
+
+    /* FOOTER */
+    footer { background:#050308; border-top:1px solid var(--b-dark); padding:3rem; }
+    .footer-inner { max-width:1300px; margin:0 auto; display:flex; flex-wrap:wrap; gap:2rem; justify-content:space-between; align-items:center; margin-bottom:2rem; }
+    .footer-links { display:flex; gap:2rem; flex-wrap:wrap; }
+    .footer-links a { color:var(--on-dark-m); text-decoration:none; font-size:0.82rem; transition:color 0.2s; }
+    .footer-links a:hover { color:var(--gold); }
+    .footer-copy { max-width:1300px; margin:0 auto; padding-top:1.5rem; border-top:1px solid var(--b-dark); font-size:0.78rem; color:var(--on-dark-m); text-align:center; }
+
+    @media(max-width:1100px) {
+      .page-wrap { grid-template-columns:1fr; }
+      .booking-sidebar { position:static; height:auto; border-top:1px solid var(--b-dark); }
+    }
+    @media(max-width:768px) {
+      header { padding:0 1.5rem; }
+      .nav-links { display:none; }
+      .nav-links.open { display:flex; flex-direction:column; gap:0; position:fixed; top:76px; left:0; right:0; background:rgba(14,8,23,0.97); backdrop-filter:blur(24px); padding:2rem 1.5rem; border-bottom:1px solid var(--b-dark); }
+      .nav-links.open a { padding:0.75rem 0; border-bottom:1px solid var(--b-dark); }
+      .hamburger { display:flex; }
+      .form-area { padding:2.5rem 1.5rem; }
+      .booking-sidebar { padding:2.5rem 1.5rem; }
+      .form-row-2 { grid-template-columns:1fr; }
+      .pay-methods { flex-direction:column; }
+      .prog-label { display:none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header>
+    <a href="index.html" class="logo">Nirvana Trails</a>
+    <nav class="nav-links" id="nav">
+      <a href="retreats.html">Retreats</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <button class="hamburger" id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
+  </header>
+
+  <div class="page-wrap">
+    <!-- FORM AREA -->
+    <div class="form-area">
+      <div class="page-title">
+        <div class="step-eyebrow">Booking</div>
+        <h1>Reserve Your Place</h1>
+        <p>Secure your retreat with a 50% deposit. The balance is due 30 days before arrival.</p>
+      </div>
+
+      <!-- PROGRESS -->
+      <div class="progress-bar" id="progress-bar">
+        <div class="prog-step active" id="ps-1"><div class="prog-step-inner"><div class="prog-num">1</div><span class="prog-label">Program</span></div></div>
+        <div class="prog-connector"></div>
+        <div class="prog-step" id="ps-2"><div class="prog-step-inner"><div class="prog-num">2</div><span class="prog-label">About You</span></div></div>
+        <div class="prog-connector"></div>
+        <div class="prog-step" id="ps-3"><div class="prog-step-inner"><div class="prog-num">3</div><span class="prog-label">Intentions</span></div></div>
+        <div class="prog-connector"></div>
+        <div class="prog-step" id="ps-4"><div class="prog-step-inner"><div class="prog-num">4</div><span class="prog-label">Add-ons</span></div></div>
+        <div class="prog-connector"></div>
+        <div class="prog-step" id="ps-5"><div class="prog-step-inner"><div class="prog-num">5</div><span class="prog-label">Payment</span></div></div>
+      </div>
+
+      <!-- SUCCESS -->
+      <div class="success-screen" id="success-screen">
+        <div class="success-icon">🙏</div>
+        <h2>Booking Request Received</h2>
+        <p>Thank you for taking this sacred step. We have received your booking request and will send you a confirmation email within 24 hours with deposit payment instructions and your pre-retreat preparation materials.</p>
+        <p>We look forward to welcoming you to Nirvana Trails.</p>
+        <a href="index.html" class="success-home">Return to Home →</a>
+      </div>
+
+      <!-- STEP 1 -->
+      <div class="form-section active" id="sec-1">
+        <div class="form-block">
+          <div class="form-block-title">Program Selection</div>
+          <div class="form-block-sub">Choose your retreat program, preferred dates, and accommodation type.</div>
+          <div class="form-group">
+            <label for="f-program">Program <span class="req">*</span></label>
+            <select id="f-program" required>
+              <option value="">— Select your program —</option>
+              <option value="3day" data-base="1200">3-Day Intensive — From $1,200</option>
+              <option value="7day" data-base="2800">7-Day Program — From $2,800</option>
+              <option value="15day" data-base="4500">15-Day Immersion — From $4,500</option>
+              <option value="21day" data-base="9500">21-Day Mastery — From $9,500</option>
+              <option value="online" data-base="1200">Online 12-Week — From $1,200</option>
+              <option value="couples" data-base="3500">Couples Retreat — From $3,500</option>
+            </select>
+            <span class="err-text" id="e-program">Please select a program.</span>
+          </div>
+          <div class="form-group">
+            <label for="f-date">Preferred Retreat Date <span class="req">*</span></label>
+            <select id="f-date" required>
+              <option value="">— Select a date —</option>
+              <option>July 1–15, 2025 (15-Day Immersion)</option>
+              <option>July 15–17, 2025 (3-Day Intensive)</option>
+              <option>August 1–7, 2025 (7-Day Program)</option>
+              <option>August 10–24, 2025 (15-Day Immersion)</option>
+              <option>September 1–21, 2025 (21-Day Mastery)</option>
+              <option>September 15–17, 2025 (3-Day Intensive)</option>
+              <option>October 1–15, 2025 (15-Day Immersion)</option>
+              <option>October 20–26, 2025 (7-Day Program)</option>
+              <option>November 1–21, 2025 (21-Day Mastery)</option>
+              <option>November 14–20, 2025 (Couples Retreat)</option>
+              <option>January 5–19, 2026 (15-Day Immersion)</option>
+              <option>February 1–21, 2026 (21-Day Mastery)</option>
+            </select>
+            <span class="err-text" id="e-date">Please select a retreat date.</span>
+          </div>
+          <div class="form-group">
+            <label for="f-accom">Accommodation Type <span class="req">*</span></label>
+            <select id="f-accom" required>
+              <option value="0">Standard — Shared Room (Included in base price)</option>
+              <option value="2000">Private Room (+$2,000)</option>
+              <option value="4000">Premium Suite (+$4,000)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-actions"><span></span><button class="btn-next" onclick="goNext(1)">Continue →</button></div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="form-section" id="sec-2">
+        <div class="form-block">
+          <div class="form-block-title">Personal Information</div>
+          <div class="form-block-sub">Tell us about yourself so we can prepare for your arrival.</div>
+          <div class="form-row-2">
+            <div class="form-group"><label for="f-first">First Name <span class="req">*</span></label><input type="text" id="f-first" placeholder="First name" required /><span class="err-text" id="e-first">Required.</span></div>
+            <div class="form-group"><label for="f-last">Last Name <span class="req">*</span></label><input type="text" id="f-last" placeholder="Last name" required /><span class="err-text" id="e-last">Required.</span></div>
+          </div>
+          <div class="form-group"><label for="f-email">Email Address <span class="req">*</span></label><input type="email" id="f-email" placeholder="your@email.com" required /><span class="err-text" id="e-email">Please enter a valid email.</span></div>
+          <div class="form-group"><label for="f-phone">Phone / WhatsApp <span class="req">*</span></label><input type="tel" id="f-phone" placeholder="+1 (555) 000-0000" required /><span class="err-text" id="e-phone">Required.</span></div>
+          <div class="form-group">
+            <label for="f-country">Country of Residence <span class="req">*</span></label>
+            <select id="f-country" required>
+              <option value="">— Select country —</option>
+              <option>United States</option><option>United Kingdom</option><option>Canada</option><option>Australia</option><option>United Arab Emirates</option><option>Singapore</option><option>Germany</option><option>France</option><option>Netherlands</option><option>Switzerland</option><option>Sweden</option><option>Norway</option><option>Denmark</option><option>Japan</option><option>South Korea</option><option>Hong Kong</option><option>New Zealand</option><option>South Africa</option><option>Brazil</option><option>Mexico</option><option>India</option><option>Other</option>
+            </select>
+            <span class="err-text" id="e-country">Please select your country.</span>
+          </div>
+          <div class="form-group"><label for="f-dob">Date of Birth <span style="font-weight:400;text-transform:none;">(optional)</span></label><input type="date" id="f-dob" /></div>
+        </div>
+        <div class="form-actions"><button class="btn-back" onclick="goPrev(2)">← Back</button><button class="btn-next" onclick="goNext(2)">Continue →</button></div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="form-section" id="sec-3">
+        <div class="form-block">
+          <div class="form-block-title">Your Intentions</div>
+          <div class="form-block-sub">Help us prepare the most supportive container for your transformation.</div>
+          <div class="form-group"><label for="f-intent">What transformation are you seeking? <span class="req">*</span></label><textarea id="f-intent" placeholder="Describe what brings you here and the changes you most wish to create in your life…" required></textarea><span class="err-text" id="e-intent">Please share your intentions with us.</span></div>
+          <div class="form-group"><label for="f-health">Health &amp; Wellbeing <span style="font-weight:400;text-transform:none;">(optional)</span></label><textarea id="f-health" placeholder="Any physical, mental, or emotional conditions, medications, or limitations our facilitators should be aware of…"></textarea></div>
+          <div class="form-group"><label for="f-exp">Prior Experience <span style="font-weight:400;text-transform:none;">(optional)</span></label><textarea id="f-exp" placeholder="Any prior yoga, meditation, retreats, or healing work experience…"></textarea></div>
+        </div>
+        <div class="form-actions"><button class="btn-back" onclick="goPrev(3)">← Back</button><button class="btn-next" onclick="goNext(3)">Continue →</button></div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="form-section" id="sec-4">
+        <div class="form-block">
+          <div class="form-block-title">Optional Add-ons</div>
+          <div class="form-block-sub">Enhance your retreat experience with these optional services.</div>
+          <div class="addon-list">
+            <div class="addon-item">
+              <input type="checkbox" id="a-transfer" value="150" onchange="recalc()" />
+              <label for="a-transfer"><span class="addon-name">Airport Transfers</span><span class="addon-desc">Round-trip airport pickup and drop-off within our service area</span></label>
+              <span class="addon-price">+$150</span>
+            </div>
+            <div class="addon-item">
+              <input type="checkbox" id="a-mentor" value="300" onchange="recalc()" />
+              <label for="a-mentor"><span class="addon-name">3-Month Email Mentoring</span><span class="addon-desc">Weekly post-retreat check-ins and guidance from a senior facilitator</span></label>
+              <span class="addon-price">+$300</span>
+            </div>
+            <div class="addon-item">
+              <input type="checkbox" id="a-plr" value="250" onchange="recalc()" />
+              <label for="a-plr"><span class="addon-name">Past Life Regression Session</span><span class="addon-desc">A 3-hour private facilitated session exploring past life patterns and healing</span></label>
+              <span class="addon-price">+$250</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-actions"><button class="btn-back" onclick="goPrev(4)">← Back</button><button class="btn-next" onclick="goNext(4)">Continue →</button></div>
+      </div>
+
+      <!-- STEP 5 -->
+      <div class="form-section" id="sec-5">
+        <div class="form-block">
+          <div class="form-block-title">Payment &amp; Confirmation</div>
+          <div class="form-block-sub">Review your booking and select your preferred payment method.</div>
+
+          <table class="payment-summary-table">
+            <tr><td>Program</td><td id="ps-prog">—</td></tr>
+            <tr><td>Accommodation</td><td id="ps-accom">Standard</td></tr>
+            <tr><td>Add-ons</td><td id="ps-addons">$0</td></tr>
+            <tr><td>Total Investment</td><td id="ps-total">—</td></tr>
+          </table>
+
+          <div class="payment-info-box">
+            <strong>Payment Schedule:</strong> A 50% deposit secures your place.
+            The remaining 50% balance is due 30 days before your retreat begins.
+            Payment instructions will be sent by email following this booking.
+          </div>
+
+          <div style="font-size:0.72rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--on-dark-m); margin-bottom:0.75rem;">Preferred Payment Method</div>
+          <div class="pay-methods">
+            <div class="pay-method"><input type="radio" name="pay" id="pay-card" value="card" checked /><label for="pay-card">💳 Credit / Debit Card</label></div>
+            <div class="pay-method"><input type="radio" name="pay" id="pay-bank" value="bank" /><label for="pay-bank">🏦 Bank Transfer</label></div>
+          </div>
+
+          <div class="terms-row">
+            <input type="checkbox" id="f-terms" required />
+            <label for="f-terms">I agree to the <a href="#">Terms of Service</a>, <a href="#">Cancellation Policy</a>, and <a href="#">Privacy Policy</a>. I understand the 50% deposit is non-refundable within 30 days of the retreat.</label>
+          </div>
+          <span class="err-text" id="e-terms">You must agree to the terms to proceed.</span>
+        </div>
+        <div class="form-actions"><button class="btn-back" onclick="goPrev(5)">← Back</button><button class="btn-submit" onclick="submitForm()">Secure Your Booking — 50% Deposit</button></div>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="booking-sidebar">
+      <div class="sidebar-block">
+        <h3>Your Booking</h3>
+        <div class="sb-program-name" id="sb-prog">No program selected</div>
+        <div class="sb-program-date" id="sb-date"></div>
+        <div class="sb-program-accom" id="sb-accom"></div>
+        <span class="sb-total-label">Total Investment</span>
+        <span class="sb-total-amount" id="sb-total">—</span>
+        <div class="sb-deposit-row">
+          <span>Deposit (50% now)</span>
+          <span class="sb-deposit-amount" id="sb-deposit">—</span>
+        </div>
+      </div>
+
+      <div class="sidebar-block">
+        <h3>Need Help?</h3>
+        <p style="font-size:0.82rem; color:var(--on-dark-m); margin-bottom:0.75rem;">Our team is happy to guide you through the process.</p>
+        <a href="mailto:retreats@nirvanatrails.com" class="sb-help-link">retreats@nirvanatrails.com</a>
+        <a href="tel:+911234567890" class="sb-help-link">+91 (123) 456-7890</a>
+        <a href="https://wa.me/911234567890" class="sb-help-link">WhatsApp us →</a>
+        <div class="sb-help-hours">Mon–Fri 9AM–6PM IST<br/>Sat–Sun 10AM–4PM IST</div>
+      </div>
+
+      <div class="sidebar-block">
+        <h3>Our Guarantee</h3>
+        <p style="font-size:0.82rem; color:var(--on-dark-m); line-height:1.7;">If you complete any program with full engagement and do not experience meaningful transformation, we invite you back to any future program at no additional charge.</p>
+      </div>
+    </aside>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <a href="index.html" class="logo">Nirvana Trails</a>
+      <div class="footer-links">
+        <a href="retreats.html">All Retreats</a>
+        <a href="contact.html">Contact</a>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+      </div>
+    </div>
+    <div class="footer-copy">© 2025 Nirvana Trails. All rights reserved.</div>
+  </footer>
+
+  <script>
+    const PRICES = { '3day':1200,'7day':2800,'15day':4500,'21day':9500,'online':1200,'couples':3500 };
+    const NAMES = { '3day':'3-Day Intensive','7day':'7-Day Program','15day':'15-Day Immersion','21day':'21-Day Mastery','online':'Online 12-Week','couples':'Couples Retreat' };
+    const ACCOMS = ['Standard (Shared Room)','Private Room','Premium Suite'];
+    const ACCOM_EXTRA = [0,2000,4000];
+
+    let step = 1;
+
+    function fmt(n) { return '$' + n.toLocaleString(); }
+
+    function recalc() {
+      const progKey = document.getElementById('f-program').value;
+      const base = PRICES[progKey] || 0;
+      const accomIdx = parseInt(document.getElementById('f-accom').value) || 0;
+      const extra = ACCOM_EXTRA[accomIdx] || 0;
+      const addons = ['a-transfer','a-mentor','a-plr'].reduce((s,id) => {
+        const el = document.getElementById(id);
+        return s + (el.checked ? parseInt(el.value) : 0);
+      }, 0);
+      const total = base + extra + addons;
+      const deposit = Math.round(total * 0.5);
+      const dateText = document.getElementById('f-date').value;
+      const accomText = extra > 0 ? ACCOMS[accomIdx] : 'Standard';
+
+      document.getElementById('sb-prog').textContent = NAMES[progKey] || 'No program selected';
+      document.getElementById('sb-date').textContent = dateText || '';
+      document.getElementById('sb-accom').textContent = accomText;
+      document.getElementById('sb-total').textContent = total ? fmt(total) : '—';
+      document.getElementById('sb-deposit').textContent = total ? fmt(deposit) : '—';
+
+      document.getElementById('ps-prog').textContent = NAMES[progKey] ? `${NAMES[progKey]} — ${fmt(base)}` : '—';
+      document.getElementById('ps-accom').textContent = extra ? `${ACCOMS[accomIdx]} (+${fmt(extra)})` : 'Standard (included)';
+      document.getElementById('ps-addons').textContent = fmt(addons);
+      document.getElementById('ps-total').textContent = total ? fmt(total) : '—';
+    }
+
+    ['f-program','f-date','f-accom'].forEach(id => document.getElementById(id).addEventListener('change', recalc));
+
+    // Pre-select from URL
+    const urlProd = new URLSearchParams(location.search).get('product');
+    if (urlProd && PRICES[urlProd]) { document.getElementById('f-program').value = urlProd; recalc(); }
+
+    function updateProgress(s) {
+      for (let i=1; i<=5; i++) {
+        const el = document.getElementById('ps-'+i);
+        el.classList.remove('active','done');
+        if (i < s) el.classList.add('done');
+        if (i === s) el.classList.add('active');
+      }
+    }
+
+    function showStep(s) {
+      document.querySelectorAll('.form-section').forEach(el => el.classList.remove('active'));
+      const sec = document.getElementById('sec-'+s);
+      if (sec) sec.classList.add('active');
+      updateProgress(s);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      step = s;
+    }
+
+    function markErr(id, errId, bad) {
+      document.getElementById(id).classList.toggle('err', bad);
+      document.getElementById(errId).classList.toggle('show', bad);
+      return bad;
+    }
+
+    function validate(s) {
+      let ok = true;
+      if (s===1) {
+        if (markErr('f-program','e-program',!document.getElementById('f-program').value)) ok=false;
+        if (markErr('f-date','e-date',!document.getElementById('f-date').value)) ok=false;
+      }
+      if (s===2) {
+        if (markErr('f-first','e-first',!document.getElementById('f-first').value.trim())) ok=false;
+        if (markErr('f-last','e-last',!document.getElementById('f-last').value.trim())) ok=false;
+        const em = document.getElementById('f-email').value.trim();
+        if (markErr('f-email','e-email',!em||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em))) ok=false;
+        if (markErr('f-phone','e-phone',!document.getElementById('f-phone').value.trim())) ok=false;
+        if (markErr('f-country','e-country',!document.getElementById('f-country').value)) ok=false;
+      }
+      if (s===3) {
+        if (markErr('f-intent','e-intent',!document.getElementById('f-intent').value.trim())) ok=false;
+      }
+      return ok;
+    }
+
+    function goNext(s) { if (!validate(s)) return; if (s===4) recalc(); showStep(s+1); }
+    function goPrev(s) { showStep(s-1); }
+
+    function submitForm() {
+      const terms = document.getElementById('f-terms').checked;
+      document.getElementById('e-terms').classList.toggle('show', !terms);
+      if (!terms) return;
+      document.getElementById('progress-bar').style.display = 'none';
+      document.querySelectorAll('.form-section').forEach(el => { el.classList.remove('active'); el.style.display='none'; });
+      document.querySelector('.booking-sidebar').style.display='none';
+      document.getElementById('success-screen').classList.add('show');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    const ham = document.getElementById('ham');
+    const nav = document.getElementById('nav');
+    ham.addEventListener('click', () => nav.classList.toggle('open'));
+    nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
+  </script>
+</body>
+</html>

@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program — Nirvana Trails</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,800;1,400;1,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    :root {
+      --ink:#0e0817; --ink-2:#160f26; --ink-card:#1c1232;
+      --gold:#c9a45c; --gold-pale:#e8c88a; --gold-dim:rgba(201,164,92,0.18);
+      --cream:#f5ede0; --cream-2:#faf6f0;
+      --plum:#6b3399; --plum-lt:#9b6cd4;
+      --on-dark:#f0e6d3; --on-dark-m:rgba(240,230,211,0.55);
+      --on-light:#1a1218; --on-light-m:#6b5868;
+      --b-dark:rgba(201,164,92,0.16); --b-light:rgba(107,51,153,0.12);
+      --success:#2d6a4f;
+    }
+    html { scroll-behavior:smooth; }
+    body { font-family:'Inter',sans-serif; background:var(--ink); color:var(--on-dark); overflow-x:hidden; }
+    .grain { position:fixed; inset:0; z-index:9999; pointer-events:none; opacity:0.028;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)'/%3E%3C/svg%3E"); }
+    @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    .reveal { opacity:0; transform:translateY(30px); transition:opacity 0.8s ease,transform 0.8s cubic-bezier(.16,1,.3,1); }
+    .reveal.visible { opacity:1; transform:none; }
+    .reveal-delay-1 { transition-delay:0.1s; }
+    .reveal-delay-2 { transition-delay:0.2s; }
+
+    /* HEADER */
+    header { position:fixed; top:0; left:0; right:0; z-index:500; padding:0 3rem; height:76px; display:flex; align-items:center; justify-content:space-between; background:rgba(14,8,23,0.92); backdrop-filter:blur(24px); border-bottom:1px solid var(--b-dark); }
+    .logo { font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); text-decoration:none; }
+    .nav-links { display:flex; align-items:center; gap:2.5rem; }
+    .nav-links a { text-decoration:none; font-size:0.8rem; font-weight:500; letter-spacing:0.06em; text-transform:uppercase; color:var(--on-dark-m); transition:color 0.3s; }
+    .nav-links a:hover { color:var(--gold); }
+    .nav-book { padding:0.5rem 1.5rem; border:1px solid var(--gold); border-radius:2px; color:var(--gold)!important; transition:all 0.3s!important; }
+    .nav-book:hover { background:var(--gold)!important; color:var(--ink)!important; }
+    .hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; padding:6px; }
+    .hamburger span { display:block; width:22px; height:1.5px; background:var(--on-dark); }
+
+    /* BREADCRUMB */
+    .breadcrumb { padding:92px 3rem 0; }
+    .breadcrumb nav { display:flex; align-items:center; gap:0.5rem; font-size:0.72rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--on-dark-m); }
+    .breadcrumb nav a { color:var(--gold); text-decoration:none; transition:opacity 0.2s; }
+    .breadcrumb nav a:hover { opacity:0.7; }
+    .breadcrumb nav span { opacity:0.4; }
+
+    /* PRODUCT HERO */
+    .product-hero { display:grid; grid-template-columns:1fr 1.1fr; gap:0; min-height:80vh; }
+    .product-visual { background:linear-gradient(160deg,rgba(107,51,153,0.1),rgba(201,164,92,0.04)); border-right:1px solid var(--b-dark); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:4rem 3rem; position:sticky; top:76px; height:calc(100svh - 76px); }
+    .product-visual svg { width:min(280px,50%); height:auto; animation:spin 60s linear infinite; }
+    .visual-meta { margin-top:2.5rem; text-align:center; border-top:1px solid var(--b-dark); padding-top:2rem; width:100%; }
+    .visual-meta-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
+    .visual-stat { text-align:center; }
+    .visual-stat-num { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:700; color:var(--gold); display:block; line-height:1; }
+    .visual-stat-lab { font-size:0.62rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--on-dark-m); margin-top:0.25rem; display:block; }
+
+    .product-info { padding:4rem 3rem; display:flex; flex-direction:column; }
+    .product-badge { display:inline-block; border:1px solid var(--gold); padding:0.25rem 0.8rem; font-size:0.65rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold); margin-bottom:1.25rem; }
+    .product-info h1 { font-family:'Playfair Display',serif; font-size:clamp(2.5rem,5vw,4rem); font-weight:800; line-height:1.05; color:var(--on-dark); margin-bottom:0.5rem; }
+    .product-subtitle-text { font-family:'Cormorant Garamond',serif; font-size:1.2rem; font-style:italic; color:var(--gold); margin-bottom:1.5rem; }
+    .product-desc { font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:300; color:var(--on-dark-m); line-height:1.85; margin-bottom:2.5rem; }
+
+    /* PRICE BLOCK */
+    .price-block { border:1px solid var(--b-dark); border-radius:2px; padding:2rem; margin-bottom:2rem; background:rgba(201,164,92,0.03); }
+    .price-main { font-family:'Playfair Display',serif; font-size:3rem; font-weight:700; color:var(--gold); line-height:1; margin-bottom:0.5rem; }
+    .price-note { font-size:0.8rem; color:var(--on-dark-m); margin-bottom:1.5rem; }
+    .price-tiers { display:flex; flex-direction:column; gap:0; }
+    .price-tier-row { display:flex; justify-content:space-between; align-items:center; padding:0.65rem 0; border-bottom:1px solid var(--b-dark); }
+    .price-tier-row:last-child { border-bottom:none; }
+    .tier-name-text { font-size:0.82rem; color:var(--on-dark-m); }
+    .tier-price-text { font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--on-dark); }
+
+    /* CTA BUTTONS */
+    .product-ctas { display:flex; gap:1rem; margin-bottom:2.5rem; flex-wrap:wrap; }
+    .btn-gold { display:inline-flex; align-items:center; gap:0.6rem; padding:0.9rem 2.4rem; background:var(--gold); color:var(--ink); font-size:0.8rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; text-decoration:none; border-radius:2px; transition:all 0.4s; border:none; cursor:pointer; font-family:'Inter',sans-serif; white-space:nowrap; }
+    .btn-gold:hover { background:var(--gold-pale); transform:translateY(-2px); box-shadow:0 12px 40px rgba(201,164,92,0.3); }
+    .btn-outline { display:inline-flex; align-items:center; gap:0.6rem; padding:0.9rem 2.4rem; background:transparent; color:var(--on-dark); font-size:0.8rem; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; text-decoration:none; border:1px solid var(--b-dark); border-radius:2px; transition:all 0.4s; }
+    .btn-outline:hover { border-color:var(--on-dark); }
+
+    /* HIGHLIGHTS */
+    .highlights-label { font-size:0.7rem; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold); margin-bottom:1rem; }
+    .highlights-list { list-style:none; display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; }
+    .highlights-list li { display:flex; align-items:flex-start; gap:0.6rem; font-size:0.82rem; color:var(--on-dark-m); line-height:1.5; }
+    .highlights-list li::before { content:'◆'; font-size:0.4rem; color:var(--gold); margin-top:5px; flex-shrink:0; }
+
+    /* CONTENT SECTIONS */
+    .content-section { padding:5rem 3rem; border-top:1px solid var(--b-dark); }
+    .content-section-light { background:var(--cream-2); color:var(--on-light); padding:5rem 3rem; }
+    .content-section-light .section-lbl { font-size:0.68rem; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:var(--plum); margin-bottom:1rem; display:flex; align-items:center; gap:0.75rem; }
+    .content-section-light .section-lbl::before { content:''; display:block; width:24px; height:1px; background:var(--plum); }
+    .section-lbl { font-size:0.68rem; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold); margin-bottom:1rem; display:flex; align-items:center; gap:0.75rem; }
+    .section-lbl::before { content:''; display:block; width:24px; height:1px; background:var(--gold); }
+    .content-h2 { font-family:'Playfair Display',serif; font-size:2rem; font-weight:700; color:var(--on-dark); margin-bottom:2.5rem; }
+    .content-h2-light { font-family:'Playfair Display',serif; font-size:2rem; font-weight:700; color:var(--on-light); margin-bottom:2.5rem; }
+
+    /* SCHEDULE */
+    .schedule-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:1.5px; background:var(--b-dark); }
+    .sched-card { background:var(--ink-card); padding:2rem; transition:background 0.3s; }
+    .sched-card:hover { background:#221540; }
+    .sched-period { font-size:0.65rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold); margin-bottom:0.6rem; }
+    .sched-card h4 { font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700; color:var(--on-dark); margin-bottom:0.5rem; }
+    .sched-card p { font-size:0.82rem; color:var(--on-dark-m); line-height:1.7; }
+
+    /* MODULES */
+    .modules-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:1px; background:var(--b-light); }
+    .module-card-item { background:var(--cream-2); padding:2rem; display:flex; gap:1.25rem; align-items:flex-start; transition:background 0.3s; }
+    .module-card-item:hover { background:var(--cream); }
+    .mod-icon-box { width:44px; height:44px; border-radius:2px; background:rgba(107,51,153,0.08); border:1px solid var(--b-light); display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0; }
+    .mod-text h4 { font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--on-light); margin-bottom:0.3rem; }
+    .mod-text p { font-size:0.82rem; color:var(--on-light-m); line-height:1.65; }
+
+    /* FAQ */
+    .faq-list { max-width:840px; display:flex; flex-direction:column; gap:0; }
+    .faq-item { border-bottom:1px solid var(--b-dark); }
+    .faq-item:first-child { border-top:1px solid var(--b-dark); }
+    .faq-btn { width:100%; text-align:left; padding:1.5rem 0; background:none; border:none; cursor:pointer; display:flex; justify-content:space-between; align-items:center; gap:1.5rem; font-size:0.95rem; font-weight:600; color:var(--on-dark); font-family:'Inter',sans-serif; transition:color 0.2s; }
+    .faq-btn:hover { color:var(--gold); }
+    .faq-icon { font-size:1rem; color:var(--gold); flex-shrink:0; transition:transform 0.3s; }
+    .faq-item.open .faq-icon { transform:rotate(180deg); }
+    .faq-answer { max-height:0; overflow:hidden; transition:max-height 0.4s ease,padding 0.3s; }
+    .faq-item.open .faq-answer { max-height:400px; }
+    .faq-answer p { font-size:0.875rem; color:var(--on-dark-m); line-height:1.8; padding-bottom:1.5rem; }
+
+    /* RELATED PROGRAMS */
+    .related-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5px; background:var(--b-dark); }
+    .related-card { background:var(--ink-card); padding:2rem; text-decoration:none; color:inherit; display:flex; flex-direction:column; transition:background 0.3s; }
+    .related-card:hover { background:#221540; }
+    .related-tag { font-size:0.65rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold); margin-bottom:0.5rem; }
+    .related-card h4 { font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700; color:var(--on-dark); margin-bottom:0.5rem; }
+    .related-card p { font-size:0.82rem; color:var(--on-dark-m); line-height:1.65; flex:1; margin-bottom:1rem; }
+    .related-price { font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:700; color:var(--gold); }
+    .related-arrow { display:inline-block; margin-top:0.75rem; font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); }
+
+    /* FOOTER */
+    footer { background:#050308; border-top:1px solid var(--b-dark); padding:3rem; }
+    .footer-inner { max-width:1300px; margin:0 auto; display:flex; flex-wrap:wrap; gap:2rem; justify-content:space-between; align-items:center; margin-bottom:2rem; }
+    .footer-links { display:flex; gap:2rem; flex-wrap:wrap; }
+    .footer-links a { color:var(--on-dark-m); text-decoration:none; font-size:0.82rem; transition:color 0.2s; }
+    .footer-links a:hover { color:var(--gold); }
+    .footer-copy { max-width:1300px; margin:0 auto; padding-top:1.5rem; border-top:1px solid var(--b-dark); font-size:0.78rem; color:var(--on-dark-m); text-align:center; }
+
+    @media(max-width:1000px) {
+      .product-hero { grid-template-columns:1fr; }
+      .product-visual { position:static; height:auto; min-height:340px; }
+      .highlights-list { grid-template-columns:1fr; }
+    }
+    @media(max-width:768px) {
+      header { padding:0 1.5rem; }
+      .nav-links { display:none; }
+      .nav-links.open { display:flex; flex-direction:column; gap:0; position:fixed; top:76px; left:0; right:0; background:rgba(14,8,23,0.97); backdrop-filter:blur(24px); padding:2rem 1.5rem; border-bottom:1px solid var(--b-dark); }
+      .nav-links.open a { padding:0.75rem 0; border-bottom:1px solid var(--b-dark); }
+      .hamburger { display:flex; }
+      .breadcrumb { padding:92px 1.5rem 0; }
+      .product-info { padding:2.5rem 1.5rem; }
+      .content-section,.content-section-light { padding:4rem 1.5rem; }
+      .related-grid { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header>
+    <a href="index.html" class="logo">Nirvana Trails</a>
+    <nav class="nav-links" id="nav">
+      <a href="retreats.html">Retreats</a>
+      <a href="about.html">About</a>
+      <a href="index.html#testimonials">Testimonials</a>
+      <a href="contact.html">Contact</a>
+      <a href="booking.html" class="nav-book">Book a Retreat</a>
+    </nav>
+    <button class="hamburger" id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
+  </header>
+
+  <div class="breadcrumb">
+    <nav>
+      <a href="index.html">Home</a><span>/</span>
+      <a href="retreats.html">Retreats</a><span>/</span>
+      <span id="bc-name">Program</span>
+    </nav>
+  </div>
+
+  <!-- PRODUCT HERO -->
+  <div class="product-hero">
+    <div class="product-visual">
+      <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="200" cy="200" r="195" stroke="#c9a45c" stroke-width="0.5" stroke-dasharray="3 6"/>
+        <circle cx="200" cy="200" r="165" stroke="#c9a45c" stroke-width="0.3"/>
+        <circle cx="200" cy="200" r="135" stroke="#c9a45c" stroke-width="0.5" stroke-dasharray="2 4"/>
+        <circle cx="200" cy="200" r="105" stroke="#c9a45c" stroke-width="0.3"/>
+        <circle cx="200" cy="200" r="75" stroke="#c9a45c" stroke-width="0.5"/>
+        <circle cx="200" cy="200" r="45" stroke="#c9a45c" stroke-width="0.3" stroke-dasharray="2 4"/>
+        <circle cx="200" cy="200" r="18" stroke="#c9a45c" stroke-width="0.5"/>
+        <g opacity="0.65">
+          <ellipse cx="200" cy="35" rx="10" ry="28" fill="#c9a45c"/>
+          <ellipse cx="200" cy="365" rx="10" ry="28" fill="#c9a45c"/>
+          <ellipse cx="35" cy="200" rx="28" ry="10" fill="#c9a45c"/>
+          <ellipse cx="365" cy="200" rx="28" ry="10" fill="#c9a45c"/>
+          <ellipse cx="88" cy="88" rx="10" ry="28" fill="#c9a45c" transform="rotate(45 88 88)"/>
+          <ellipse cx="312" cy="88" rx="10" ry="28" fill="#c9a45c" transform="rotate(-45 312 88)"/>
+          <ellipse cx="88" cy="312" rx="10" ry="28" fill="#c9a45c" transform="rotate(-45 88 312)"/>
+          <ellipse cx="312" cy="312" rx="10" ry="28" fill="#c9a45c" transform="rotate(45 312 312)"/>
+        </g>
+        <g opacity="0.4">
+          <ellipse cx="200" cy="105" rx="7" ry="18" fill="#9b6cd4"/>
+          <ellipse cx="200" cy="295" rx="7" ry="18" fill="#9b6cd4"/>
+          <ellipse cx="105" cy="200" rx="18" ry="7" fill="#9b6cd4"/>
+          <ellipse cx="295" cy="200" rx="18" ry="7" fill="#9b6cd4"/>
+        </g>
+        <circle cx="200" cy="200" r="8" fill="#c9a45c"/>
+      </svg>
+      <div class="visual-meta">
+        <div class="visual-meta-grid" id="visual-stats">
+          <div class="visual-stat"><span class="visual-stat-num" id="vs1">15</span><span class="visual-stat-lab">Days</span></div>
+          <div class="visual-stat"><span class="visual-stat-num" id="vs2">9</span><span class="visual-stat-lab">Modules</span></div>
+          <div class="visual-stat"><span class="visual-stat-num" id="vs3">12</span><span class="visual-stat-lab">Max Group</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-info">
+      <span class="product-badge" id="p-badge">Signature</span>
+      <h1 id="p-title">Loading…</h1>
+      <p class="product-subtitle-text" id="p-subtitle"></p>
+      <p class="product-desc" id="p-desc"></p>
+
+      <div class="price-block">
+        <div class="price-main" id="p-price">—</div>
+        <div class="price-note" id="p-price-note">per person</div>
+        <div class="price-tiers" id="p-tiers"></div>
+      </div>
+
+      <div class="product-ctas">
+        <a href="booking.html" class="btn-gold" id="p-book-btn">Reserve Your Place</a>
+        <a href="contact.html" class="btn-outline">Ask a Question</a>
+      </div>
+
+      <div class="highlights-label">What's Included</div>
+      <ul class="highlights-list" id="p-highlights"></ul>
+    </div>
+  </div>
+
+  <!-- SCHEDULE -->
+  <div class="content-section" id="schedule-section">
+    <div class="section-lbl">Program Flow</div>
+    <h2 class="content-h2" id="sched-headline">Schedule</h2>
+    <div class="schedule-grid" id="schedule-grid"></div>
+  </div>
+
+  <!-- MODULES -->
+  <div class="content-section-light">
+    <div style="max-width:1300px; margin:0 auto;">
+      <div class="content-section-light .section-lbl" style="font-size:0.68rem; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:var(--plum); margin-bottom:1rem; display:flex; align-items:center; gap:0.75rem;">
+        <span style="display:block; width:24px; height:1px; background:var(--plum);"></span>
+        Core Modules
+      </div>
+      <h2 class="content-h2-light">What You Will Learn</h2>
+      <div class="modules-grid" id="modules-grid"></div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="content-section">
+    <div class="section-lbl">Frequently Asked Questions</div>
+    <h2 class="content-h2">Before You Arrive</h2>
+    <div class="faq-list" id="faq-list"></div>
+  </div>
+
+  <!-- RELATED -->
+  <div class="content-section" style="border-top:1px solid var(--b-dark);">
+    <div class="section-lbl">Other Programs</div>
+    <h2 class="content-h2">You Might Also Consider</h2>
+    <div class="related-grid" id="related-grid"></div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <a href="index.html" class="logo">Nirvana Trails</a>
+      <div class="footer-links">
+        <a href="retreats.html">All Retreats</a>
+        <a href="about.html">About</a>
+        <a href="booking.html">Book Now</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+    <div class="footer-copy">© 2025 Nirvana Trails. All rights reserved.</div>
+  </footer>
+
+  <script>
+    const DATA = {
+      '3day': {
+        badge:'Quick Start', title:'3-Day Intensive', subtitle:'The Gateway Experience',
+        desc:'A powerful short-form immersion designed as the ideal first step into the Nirvana Trails methodology. In three days you will decompress, reset your nervous system, taste the power of sound healing, and leave with a clear pathway forward.',
+        price:'From $1,200', priceNote:'per person', stats:['3','3','20'],
+        tiers:[{n:'Standard (Shared Room)',p:'$1,200'},{n:'Private Room',p:'$1,800'}],
+        highlights:['Nervous system reset & stress relief','Chakra system introduction','Sound bath immersion sessions','Sattvic meals & morning yoga','Opening ceremony & closing circle','Post-retreat integration guide','Alumni community access','Retreat workbook & resources'],
+        schedule:[{p:'Day 1',h:'Arrival & Opening',d:'Welcome ceremony, orientation, sattvic dinner, and evening sound bath to settle into the sacred space.'},{p:'Day 2',h:'Nervous System Reset',d:'Morning yoga, breathwork practices, chakra introduction teaching, guided meditation, and individual energy alignment.'},{p:'Day 3',h:'Integration & Closure',d:'Reflection practices, personal insights session, closing ceremony, and a personalised next-step integration plan.'}],
+        modules:[{i:'🌊',h:'Stress Relief',d:'Evidence-based somatic practices to release chronic tension and reset the nervous system at a deep level.'},{i:'🔮',h:'Chakra Introduction',d:'Understanding the seven primary energy centres and their role in physical, emotional, and mental wellbeing.'},{i:'🎵',h:'Sound Healing',d:'Tibetan bowls, crystal singing bowls, and tuning forks to shift your body\'s vibrational state from inside out.'},{i:'🧘',h:'Sattvic Living',d:'Introduction to Ayurvedic sattvic principles — food, rhythm, and daily practices that cultivate clarity and calm.'},{i:'💨',h:'Breathwork',d:'Pranayama techniques for immediate nervous system regulation and safe emotional release.'},{i:'🌿',h:'Integration',d:'Tools and commitments to carry transformation home and keep it alive in the weeks and months that follow.'}],
+        faqs:[{q:'Do I need prior spiritual experience?',a:'None at all. This program is specifically designed as an accessible entry point for complete beginners. All practices are introduced from the ground up in a gentle, non-dogmatic way.'},{q:'What is the cancellation policy?',a:'Cancellations 30+ days before the retreat receive a full refund minus a $150 admin fee. Within 30 days, we offer a full credit toward any future retreat date within 18 months.'},{q:'Are vegetarian and vegan options available?',a:'All meals are sattvic vegetarian. Vegan, gluten-free, and major allergy accommodations are available with at least 2 weeks advance notice at no additional charge.'},{q:'Can I extend my stay into a longer program?',a:'Subject to availability, participants may upgrade to the 7-Day Program on arrival. Please contact us before your retreat date to arrange this.'},{q:'What is the transformation guarantee?',a:'If you complete the program with full engagement and do not experience meaningful transformation, we invite you back to any future program within 12 months at no additional charge.'}],
+        related:[{key:'7day',tag:'7 Days',h:'Deep Dive Program',d:'The natural next step — complete chakra work, aura cleansing, and sound healing for lasting change.',p:'From $2,800'},{key:'15day',tag:'15 Days · Signature',h:'The Complete Immersion',d:'Our flagship — 9 modules, Kundli reading, and Akashic Records access over 15 transformational days.',p:'From $4,500'},{key:'online',tag:'12 Weeks · Online',h:'Digital Immersion',d:'The full Nirvana Trails methodology delivered digitally — accessible from anywhere in the world.',p:'From $1,200'}]
+      },
+      '7day': {
+        badge:'Popular', title:'7-Day Program', subtitle:'The Week of Transformation',
+        desc:'A complete week-long immersion that takes you through the full chakra system, aura cleansing, sound healing, and the foundational sattvic lifestyle practices. Most participants report this as the week that changed everything.',
+        price:'From $2,800', priceNote:'per person', stats:['7','6','16'],
+        tiers:[{n:'Standard (Shared Room)',p:'$2,800'},{n:'Private Room',p:'$3,500'},{n:'Premium Suite',p:'$4,200'}],
+        highlights:['Complete 7-chakra journey','Aura cleansing & energy optimization','Sound healing & vibrational medicine immersions','Individual energy healing session','Sattvic meals & Ayurvedic consultation','Personalized chakra assessment report','3-month post-retreat integration support','Lifetime alumni community access','Airport transfer (within service area)','Retreat workbook & resource library'],
+        schedule:[{p:'Days 1–2',h:'Arrival & Reset',d:'Welcome ceremony, orientation, nervous system reset deep-dive, introductory sound bath, and opening circle.'},{p:'Days 3–4',h:'Chakra Journey',d:'Complete 7-chakra activation sequence, aura reading, energy bodywork, and chakra-specific meditation sessions.'},{p:'Days 5–6',h:'Sound & Energy',d:'Advanced sound healing immersions, aura optimization, vibrational medicine practices, and individual healing session.'},{p:'Day 7',h:'Integration',d:'Reflection, personal insights, personalized integration plan, closing ceremony, and alumni community orientation.'}],
+        modules:[{i:'🌊',h:'Stress Relief & Reset',d:'Complete nervous system regulation and release of accumulated stress held in the physical and energy body.'},{i:'🔮',h:'Chakra System Mastery',d:'Full 7-chakra journey — activation, clearing, and balancing of each energy centre with measurable results.'},{i:'✨',h:'Aura Cleansing',d:'Energy field reading, clearing of energetic debris, and optimization of all layers of your aura.'},{i:'🎵',h:'Sound Healing',d:'Deep therapeutic sound immersions using Tibetan bowls, crystal singing bowls, tuning forks, and gongs.'},{i:'🥗',h:'Sattvic Lifestyle',d:'Practical Ayurvedic nutrition, daily rhythms, and lifestyle architecture that support sustained clarity and vitality.'},{i:'🌿',h:'Integration Planning',d:'A personalized integration plan to sustain and deepen your transformation in the months following the retreat.'}],
+        faqs:[{q:'Is prior meditation experience required?',a:'No. All practices are taught progressively. Beginners receive complete foundational training; experienced practitioners access deeper layers. Both are equally served by this program.'},{q:'What is the cancellation policy?',a:'Full refund minus $200 admin fee for cancellations 45+ days before. Within 45 days, full credit transfer to any future retreat date within 18 months.'},{q:'Are dietary requirements accommodated?',a:'Yes. All meals are sattvic vegetarian. Vegan, gluten-free, and allergy-specific options are available with 2 weeks advance notice.'},{q:'Can I upgrade to the 15-Day program?',a:'7-Day participants who extend to the 15-Day Immersion receive a $500 credit toward the upgrade, subject to availability. Contact us in advance to arrange.'},{q:'What transformation is realistically possible in 7 days?',a:'Most participants report significant reductions in anxiety, greatly improved sleep quality, emotional clarity, and a renewed sense of life purpose. The 7-day depth allows for genuine nervous system repatterning — not just relaxation.'}],
+        related:[{key:'3day',tag:'3 Days',h:'Weekend Intensive',d:'A shorter entry point for those exploring the Nirvana Trails methodology for the first time.',p:'From $1,200'},{key:'15day',tag:'15 Days · Signature',h:'The Complete Immersion',d:'Our flagship — 9 full modules, Kundli analysis, and Akashic Records over 15 transformational days.',p:'From $4,500'},{key:'couples',tag:'Couples',h:'Couples Retreat',d:'The same transformational depth, designed specifically for couples ready to grow together.',p:'From $3,500'}]
+      },
+      '15day': {
+        badge:'Signature', title:'15-Day Immersion', subtitle:'Complete Life Transformation',
+        desc:'Our flagship program — the most comprehensive transformational retreat available. Across 15 days you progress through 9 full modules, 60+ hours of expert teaching, a personal Kundli analysis, and an Akashic Records session. This is not a retreat. It is a complete life reset from the inside out.',
+        price:'From $4,500', priceNote:'per person', stats:['15','9','12'],
+        tiers:[{n:'Standard (Shared Room)',p:'$4,500'},{n:'Private Room',p:'$6,500'},{n:'Premium Suite',p:'$8,500'}],
+        highlights:['All 9 transformation modules (60+ hours)','Personal Kundli (birth chart) analysis','Vedic astrology reading & life guidance','Numerology profile & sacred numbers','Akashic Records access session','Individual energy healing sessions ×3','Complete chakra assessment & balancing','Aura reading & deep optimization','Sound healing immersions (daily)','Sattvic cuisine & Ayurvedic consultation','6-month post-retreat email support','Lifetime alumni community access','Airport transfers included','Certificate of completion'],
+        schedule:[{p:'Days 1–3',h:'Arrival & Reset',d:'Welcome ceremony, orientation, complete nervous system reset, initial sound bath, and foundation practices.'},{p:'Days 4–6',h:'Chakra & Aura Mastery',d:'Complete 7-chakra journey, aura reading and cleansing, energy bodywork, and individual healing session.'},{p:'Days 7–9',h:'Sound & Occult Sciences',d:'Advanced sound healing, aura optimization, introduction to esoteric wisdom, sacred geometry, and energy mastery.'},{p:'Days 10–12',h:'Vedic Arts & Numerology',d:'Kundli analysis, Vedic astrology deep-dive, numerology profile and sacred numbers reading.'},{p:'Days 13–15',h:'Akashic Records & Integration',d:'Akashic Records session, soul wisdom download, integration practices, closing ceremony, and alumni orientation.'}],
+        modules:[{i:'🌊',h:'Stress Relief & Reset',d:'Complete nervous system regulation and somatic release of stress and trauma held in the body.'},{i:'🔮',h:'Chakra System Mastery',d:'Full 7-chakra activation, sustained clearing, and energetic alignment that lasts beyond the retreat.'},{i:'✨',h:'Aura Cleansing',d:'Multi-layer aura diagnostics, deep cleansing, and optimization of all layers of your energy field.'},{i:'🎵',h:'Sound Healing',d:'Therapeutic sound immersions for cellular healing, emotional release, and consciousness expansion.'},{i:'🥗',h:'Sattvic Living',d:'Ayurvedic nutrition, daily routines, and lifestyle design for sustained clarity, vitality, and calm.'},{i:'🌑',h:'Occult Sciences',d:'Sacred geometry, esoteric wisdom traditions, and advanced energy mastery practices from multiple lineages.'},{i:'⭐',h:'Vedic Astrology',d:'Personal Kundli analysis and comprehensive Vedic astrology reading for life path and soul purpose clarity.'},{i:'🔢',h:'Numerology',d:'Your complete numerology profile — life path number, expression, soul urge, and destiny decoded.'},{i:'📖',h:'Akashic Records',d:'Facilitated access to your soul\'s Akashic record — past life patterns, soul contracts, and soul path clarity.'}],
+        faqs:[{q:'Is prior spiritual experience needed?',a:'No. The program is structured progressively. Beginners receive comprehensive foundational training; experienced practitioners go deeper with advanced techniques. Both are equally, profoundly served by this program.'},{q:'What is the cancellation policy?',a:'Full refund minus $300 admin fee for cancellations 60+ days before. Within 60 days, full credit transfer to any future retreat within 24 months. Within 30 days, 50% credit.'},{q:'What dietary needs can be accommodated?',a:'All meals are sattvic vegetarian. Vegan, gluten-free, diabetic-friendly, and all major allergy options are available. Please specify your requirements at the time of booking.'},{q:'Can I attend the 21-Day Mastery directly?',a:'The 15-Day Immersion is the prerequisite for the 21-Day Mastery. It builds the energetic and cognitive foundation required to safely and effectively access the advanced work in the extended program.'},{q:'What is the transformation guarantee?',a:'If after completing the full 15-Day program in full engagement you do not experience meaningful, tangible transformation, we invite you to return to any future program at no additional charge, valid for 24 months.'}],
+        related:[{key:'7day',tag:'7 Days',h:'Deep Dive Program',d:'Begin here if you want to taste the immersive methodology before committing to 15 days.',p:'From $2,800'},{key:'21day',tag:'21 Days · Advanced',h:'Total Mastery',d:'The natural progression — past life regression, advanced Akashic work, and 6 months of mentoring.',p:'From $9,500'},{key:'online',tag:'12 Weeks · Online',h:'Digital Immersion',d:'Begin the transformation from home before attending a residential retreat.',p:'From $1,200'}]
+      },
+      '21day': {
+        badge:'Advanced', title:'21-Day Mastery', subtitle:'Total Life Mastery',
+        desc:'The ultimate transformational immersion for those committed to irreversible, total-spectrum change. Extending and deepening all 9 modules, the 21-Day Mastery adds past life regression, advanced Akashic exploration, advanced occult sciences, and sustained 1:1 mentoring. Prerequisites: 15-Day Immersion or equivalent.',
+        price:'From $9,500', priceNote:'per person', stats:['21','9+','8'],
+        tiers:[{n:'Standard (Shared Room)',p:'$9,500'},{n:'Private Room',p:'$12,000'},{n:'Premium Suite',p:'$14,500'}],
+        highlights:['Extended deep-dive into all 9 modules','Advanced occult sciences & esoteric wisdom','Multiple Akashic Records sessions','Past life regression (3-hour private session)','Advanced Vedic astrology for destiny mapping','Individual healing sessions ×6','Personalized spiritual mastery plan','Monthly 1:1 mentoring for 6 months post-retreat','Priority access to all future programs','All 15-Day inclusions plus advanced curriculum','Lifetime alumni community access','Certificate of Advanced Mastery'],
+        schedule:[{p:'Week 1',h:'Foundation & Reset',d:'Deep nervous system reset, complete chakra journey, aura multi-layer optimization, and sattvic immersion.'},{p:'Week 2',h:'Cosmic & Soul Work',d:'Advanced Vedic astrology, deep numerology, advanced occult sciences, and initial Akashic Records exploration.'},{p:'Week 3',h:'Mastery & Integration',d:'Past life regression, multiple Akashic sessions, advanced energy mastery, personalized plan, and closing ceremony.'}],
+        modules:[{i:'🌊',h:'Advanced Reset',d:'Deep somatic work, trauma-informed release techniques, and complete optimization of the nervous system and energy body.'},{i:'🔮',h:'Chakra Mastery+',d:'Advanced energy centre work including secondary chakras, nadis, pranic field activation, and energy sovereignty.'},{i:'✨',h:'Aura Mastery',d:'Multi-layer aura work, etheric body strengthening, and practices for maintaining a clear, protected energy field.'},{i:'🎵',h:'Sound Mastery',d:'Advanced sound healing facilitation techniques and a personal vibrational medicine toolkit for ongoing use.'},{i:'🌑',h:'Advanced Occult',d:'Deeper esoteric traditions, sacred alchemy, advanced sigil work, and energy mastery practices from multiple traditions.'},{i:'📖',h:'Akashic Deep Dive',d:'Multiple Akashic sessions covering multiple lifetimes, soul contracts, karmic clearing, and soul path activation.'},{i:'🕯️',h:'Past Life Regression',d:'A 3-hour facilitated past life regression session for healing present-life patterns, relationships, and limitations.'},{i:'⭐',h:'Destiny Mapping',d:'Advanced Vedic astrology combined with numerology for a comprehensive map of your soul\'s path and purpose.'},{i:'🏛️',h:'Embodied Mastery',d:'Integration of all wisdom into daily lived reality — so spiritual mastery becomes your natural way of being.'}],
+        faqs:[{q:'Is the 15-Day Immersion truly required?',a:'Yes. The 21-Day Mastery is continuation and deepening work that builds directly on foundations established in the 15-Day program. Without it, the advanced material cannot be safely or effectively accessed. There are no exceptions to this prerequisite.'},{q:'What is the cancellation policy?',a:'Full refund minus $500 admin fee for cancellations 90+ days before. Within 90 days, full credit transfer to any future program within 36 months. No refund is available within 30 days of the retreat.'},{q:'What ongoing support is provided?',a:'Six months of monthly 1:1 mentoring sessions post-retreat, access to the advanced alumni community, priority booking for all future programs, and lifetime access to all digital resources — including any newly added content.'},{q:'How many people are in the group?',a:'The 21-Day Mastery is capped at 8 participants maximum. This is deliberate — the depth of advanced work requires intensive individual attention from facilitators that is not possible in larger groups.'},{q:'What makes this different from the 15-Day program?',a:'The depth and breadth of what\'s possible in 21 days, not just the duration. Past life regression, advanced occult work, multiple Akashic sessions, and sustained 1:1 mentoring make this a fundamentally different level of transformation.'}],
+        related:[{key:'15day',tag:'15 Days · Prerequisite',h:'The Complete Immersion',d:'The 15-Day Immersion is the prerequisite for this program — begin your mastery journey here.',p:'From $4,500'},{key:'couples',tag:'Couples',h:'Couples Retreat',d:'Attend as a couple and undergo transformation together with a shared container for healing.',p:'From $3,500'},{key:'online',tag:'12 Weeks · Online',h:'Digital Immersion',d:'Prepare your foundation for residential retreats with the online program.',p:'From $1,200'}]
+      },
+      'online': {
+        badge:'Digital', title:'Online 12-Week', subtitle:'Transform from Anywhere',
+        desc:'The complete Nirvana Trails methodology delivered digitally — live weekly group sessions, 50+ hours of self-paced video content, a private community, and dedicated email mentoring support. Real transformation, accessible from anywhere in the world.',
+        price:'From $1,200', priceNote:'per program', stats:['12wk','50+hrs','Open'],
+        tiers:[{n:'Standard (self-paced + community)',p:'$1,200'},{n:'Premium (+ live sessions + mentoring)',p:'$1,800'}],
+        highlights:['Live weekly group sessions (90 min, Zoom)','50+ hours of self-paced video library','Private online community access','Weekly guided meditation recordings','12 comprehensive module workbooks','Email mentoring throughout program','Monthly guest expert live sessions','Lifetime access to all course materials','Certificate of completion','$300 credit toward any future residential retreat'],
+        schedule:[{p:'Weeks 1–3',h:'Foundations',d:'Stress relief, nervous system education, chakra fundamentals, sound healing introduction, and daily sattvic practices.'},{p:'Weeks 4–6',h:'Energy Body',d:'Full chakra deep-dive, aura work, advanced sound healing practices, and energy management tools.'},{p:'Weeks 7–9',h:'Cosmic Wisdom',d:'Vedic astrology basics, numerology introduction, occult sciences foundations, and esoteric wisdom traditions.'},{p:'Weeks 10–12',h:'Soul & Integration',d:'Akashic Records introduction, integration of all modules, sustainable life design, and completion ceremony.'}],
+        modules:[{i:'💻',h:'Video Library',d:'50+ hours of expert-led video content covering all 9 transformation topics, available on demand with lifetime access.'},{i:'👥',h:'Live Sessions',d:'Weekly 90-minute live Zoom sessions for Q&A, group practice, and the community connection that accelerates transformation.'},{i:'📔',h:'Module Workbooks',d:'12 detailed workbooks with exercises, reflection prompts, and integration practices to anchor each week\'s learning.'},{i:'🌐',h:'Online Community',d:'A private, facilitated community for peer support, practice sharing, and meaningful accountability between sessions.'},{i:'📧',h:'Email Mentoring',d:'Direct email access to a senior facilitator throughout your 12-week journey for personalised guidance and support.'},{i:'🎓',h:'Guest Experts',d:'Monthly live sessions with guest experts in Vedic astrology, sound healing, chakra work, and related healing arts.'}],
+        faqs:[{q:'What technology do I need?',a:'A computer or tablet with a stable internet connection, a Zoom account (free), and a quiet, private space for practice sessions. All other materials are provided digitally after enrollment.'},{q:'Can I do this at my own pace?',a:'The video library is fully self-paced with lifetime access. Live sessions follow a weekly schedule — all sessions are recorded and available within 24 hours for those who cannot attend live.'},{q:'Is this as effective as an in-person retreat?',a:'It is different rather than lesser. The online program develops practices you integrate into daily life over 12 weeks, which creates deep, sustainable change. Many participants go on to attend residential retreats and report that the digital foundation accelerated their in-person experience.'},{q:'What if I fall behind?',a:'All video content has lifetime access. The program is designed flexibly. Our community team provides accountability support and check-ins to help you stay engaged regardless of your pace.'},{q:'Do I receive a discount on future in-person retreats?',a:'Yes. Online graduates receive a $300 credit toward any residential retreat, valid for 24 months from program completion.'}],
+        related:[{key:'3day',tag:'3 Days',h:'Weekend Intensive',d:'Begin with the online program, then experience the difference of in-person immersion at our retreat center.',p:'From $1,200'},{key:'7day',tag:'7 Days',h:'Deep Dive Program',d:'The natural in-person follow-up after completing your digital foundation.',p:'From $2,800'},{key:'15day',tag:'15 Days · Signature',h:'The Complete Immersion',d:'The ultimate residential experience — ideally preceded by the online digital foundation.',p:'From $4,500'}]
+      },
+      'couples': {
+        badge:'Couples', title:'Couples Retreat', subtitle:'Transform Together',
+        desc:'A bespoke transformation experience designed for couples ready to deepen their bond, heal relational wounds, and grow together through shared spiritual practice. This is not couples therapy — it is couples evolution. You will leave with greater understanding, intimacy, and a shared toolkit for continued growth.',
+        price:'From $3,500', priceNote:'per couple', stats:['7–15d','6+hrs','3–6 couples'],
+        tiers:[{n:'Standard (7-Day Couples)',p:'$3,500/couple'},{n:'Premium (15-Day Couples)',p:'$6,500/couple'}],
+        highlights:['Couples energy alignment sessions','Relationship & intimacy healing work','Shared chakra balancing practices','Partner sound healing immersions','Communication & conflict resolution tools','Individual sessions for each partner','Vedic astrology compatibility (synastry) reading','Couples workbook & integration resources','Post-retreat relationship support plan','Lifetime alumni community access'],
+        schedule:[{p:'Days 1–2',h:'Arrival & Connection',d:'Welcome ceremony, couples orientation, opening ritual, and first shared energy alignment session.'},{p:'Days 3–5',h:'Healing & Deepening',d:'Individual and couples sessions, chakra work, intimacy healing practices, and communication tools.'},{p:'Days 6–7',h:'Vision & Closure',d:'Shared Vedic compatibility reading, relationship vision mapping, closing ceremony, and integration planning.'}],
+        modules:[{i:'💞',h:'Energy Alignment',d:'Align your individual energy fields and cultivate a harmonious, loving shared energetic field as a couple.'},{i:'🗣️',h:'Conscious Communication',d:'Non-violent communication, deep listening practices, and tools for navigating conflict with presence and compassion.'},{i:'🔮',h:'Couples Chakra Work',d:'Explore how each partner\'s chakra patterns interact, and how to create energetic harmony between two people.'},{i:'🎵',h:'Sound Healing',d:'Partner sound healing practices and shared immersions that create deep collective relaxation and resonance.'},{i:'⭐',h:'Synastry Reading',d:'Vedic astrology compatibility reading — understanding the cosmic blueprint and purpose of your relationship.'},{i:'🌿',h:'Relationship Integration',d:'A personalized practice plan for sustaining, deepening, and growing your connection long after the retreat ends.'}],
+        faqs:[{q:'Do we both need prior spiritual experience?',a:'No. The program is designed to welcome couples at all levels of experience. The curriculum meets both partners exactly where they are and creates a shared foundation from the very beginning.'},{q:'Is this suitable for couples going through a difficult time?',a:'Yes. Many couples attend during challenging periods. Our facilitators are trained to hold space for difficult dynamics with compassion and skill. This is not crisis therapy, but it provides powerful tools for genuine resolution and reconnection.'},{q:'Can same-sex couples attend?',a:'Absolutely. Nirvana Trails is fully inclusive and warmly welcoming to all couples regardless of gender, sexual orientation, or relationship structure. Our programs honor all forms of love.'},{q:'What if one partner is reluctant?',a:'This is very common. We recommend the willing partner schedule a complimentary call with our team — we can often address the reluctant partner\'s specific questions and concerns directly.'},{q:'What is the cancellation policy?',a:'Full refund minus $250 admin fee for cancellations 45+ days before. Within 45 days, full credit transfer to any future program within 18 months.'}],
+        related:[{key:'15day',tag:'15 Days · Signature',h:'The Complete Immersion',d:'Follow your couples journey with individual 15-day programs for even deeper personal transformation.',p:'From $4,500'},{key:'7day',tag:'7 Days',h:'Deep Dive Program',d:'Attend as individuals after the couples retreat to deepen your personal journey.',p:'From $2,800'},{key:'online',tag:'12 Weeks · Online',h:'Digital Immersion',d:'The digital program can be done as a couple — a shared online transformation experience.',p:'From $1,200'}]
+      }
+    };
+
+    function param(n) { return new URLSearchParams(location.search).get(n); }
+
+    function render() {
+      const key = param('product') || '15day';
+      const d = DATA[key] || DATA['15day'];
+      document.title = d.title + ' — Nirvana Trails';
+      document.getElementById('bc-name').textContent = d.title;
+      document.getElementById('p-badge').textContent = d.badge;
+      document.getElementById('p-title').textContent = d.title;
+      document.getElementById('p-subtitle').textContent = d.subtitle;
+      document.getElementById('p-desc').textContent = d.desc;
+      document.getElementById('p-price').textContent = d.price;
+      document.getElementById('p-price-note').textContent = d.priceNote;
+      document.getElementById('p-book-btn').href = 'booking.html?product=' + key;
+      const [s1,s2,s3] = d.stats;
+      document.getElementById('vs1').textContent = s1;
+      document.getElementById('vs2').textContent = s2;
+      document.getElementById('vs3').textContent = s3;
+      document.getElementById('p-tiers').innerHTML = d.tiers.map(t =>
+        `<div class="price-tier-row"><span class="tier-name-text">${t.n}</span><span class="tier-price-text">${t.p}</span></div>`).join('');
+      document.getElementById('p-highlights').innerHTML = d.highlights.map(h => `<li>${h}</li>`).join('');
+      document.getElementById('schedule-grid').innerHTML = d.schedule.map(s =>
+        `<div class="sched-card"><div class="sched-period">${s.p}</div><h4>${s.h}</h4><p>${s.d}</p></div>`).join('');
+      document.getElementById('modules-grid').innerHTML = d.modules.map(m =>
+        `<div class="module-card-item"><div class="mod-icon-box">${m.i}</div><div class="mod-text"><h4>${m.h}</h4><p>${m.d}</p></div></div>`).join('');
+      document.getElementById('faq-list').innerHTML = d.faqs.map(f =>
+        `<div class="faq-item"><button class="faq-btn">${f.q}<span class="faq-icon">▼</span></button><div class="faq-answer"><p>${f.a}</p></div></div>`).join('');
+      document.getElementById('related-grid').innerHTML = d.related.map(r =>
+        `<a href="product-detail.html?product=${r.key}" class="related-card"><div class="related-tag">${r.tag}</div><h4>${r.h}</h4><p>${r.d}</p><div class="related-price">${r.p}</div><span class="related-arrow">Learn more →</span></a>`).join('');
+    }
+
+    render();
+
+    document.addEventListener('click', e => {
+      const btn = e.target.closest('.faq-btn');
+      if (!btn) return;
+      btn.parentElement.classList.toggle('open');
+    });
+
+    const ham = document.getElementById('ham');
+    const nav = document.getElementById('nav');
+    ham.addEventListener('click', () => nav.classList.toggle('open'));
+    nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
+
+    const reveals = document.querySelectorAll('.reveal');
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold:0.1, rootMargin:'0px 0px -60px 0px' });
+    reveals.forEach(el => obs.observe(el));
+  </script>
+</body>
+</html>
